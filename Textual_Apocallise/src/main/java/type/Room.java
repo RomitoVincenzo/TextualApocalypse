@@ -31,7 +31,7 @@ public class Room {
       */
     
     /*
-     * getListObject usato per la stampa degli oggetti in stanza
+     * getListObject usato per la stampa degli oggetti in stanza.
      * */
 
     private boolean visible = true;
