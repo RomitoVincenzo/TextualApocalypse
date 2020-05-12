@@ -12,16 +12,16 @@ import type.CommandType;
 import java.util.Scanner;
 
 /**
- * ATTENZIONE: l'Engine è molto spartano, in realtà demanda la logica alla
+ * ATTENZIONE: l'Engine e' molto spartano, in realta'� demanda la logica alla
  * classe che implementa GameDescription e si occupa di gestire I/O sul
  * terminale.
  *
- * @author pierpaolo
  */
-public class Engine {
 
-    private final GameDescription game;
+public class Engine {			
 
+    private final GameDescription game;			//gioco
+    
     private final Parser parser;
 
     public Engine(GameDescription game) {

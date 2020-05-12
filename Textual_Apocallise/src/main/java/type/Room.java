@@ -20,7 +20,19 @@ public class Room {
 
     private String description;
 
-    private String look;
+    private String look; 	
+    
+    /*abbiamo bisogno di una descrizione completa + oggetti stanza per la prima volta in 
+      cui entra in stanza e per comando guarda 
+      Quando il giocatore entrerà per la seconda volta nella stessa stanza verrà visualizzata
+      una descizione corta + oggetti presenti in stanza con evenutali stati
+      La descrizione corta può essere pensata come
+      print("Sei nella" + room.getname() + print oggetti in stanza );
+      */
+    
+    /*
+     * getListObject usato per la stampa degli oggetti in stanza
+     * */
 
     private boolean visible = true;
 
