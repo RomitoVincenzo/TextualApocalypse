@@ -1,0 +1,183 @@
+// _____________________COMMENTI_____________________
+
+/*
+   	STANZE			ID 		DONE
+
+    Soggiorno		1		✔
+    Bagno 			2 		✔
+    Corridoio 		3		✔
+    Cucina 			4		✔
+    Armeria 		5		✔
+    Ingresso 		6		
+    Garage 			7
+*/
+
+// _____________________OBJECT_____________________
+
+
+CREATE TABLE OBJECT(
+ID INT PRIMARY KEY , 
+NAME VARCHAR(20) ,
+DESCRIPTION VARCHAR(500) ,
+ALIAS VARCHAR(200) ,
+OPENABLE BOOLEAN ,
+PICKUPABLE BOOLEAN ,
+PUSHABLE BOOLEAN ,
+OPEN BOOLEAN ,
+PUSH BOOLEAN ,
+CONTAINER INT ,
+ISCONTAINER BOOLEAN,
+ROOM INT,
+FOREIGN KEY(CONTAINER) REFERENCES OBJECT(ID) 
+FOREIGN KEY(ROOM) REFERENCES ROOM(ID) 
+);
+
+//______STANZA 5______ [ARMERIA]
+
+INSERT INTO OBJECT VALUES (1,'Griglia',
+'Griglia: espositore composto da una lastra bucherellata e dei ganci sui quali è possibile adagiare armi da fuoco.', 'GRIGLIA,ESPOSITORE,griglia,espositore,Griglia,Espositore',
+FALSE,FALSE,FALSE,FALSE,FALSE,NULL,TRUE,5
+);
+
+
+INSERT INTO OBJECT VALUES (2,'Glock-17',
+'Pistola semiautomatica a bloccaggio meccanico e funzionamento a rinculo, dotata di sicura al percussore, al grilletto e di un dispositivo di sicurezza contro la caduta dell’arma.','PISTOLA,GLOCK,GLOCK17,GLOCK-17,pistola,glock,glock17,glock-17,Pistola,Glock,Glock17',
+FALSE,TRUE,FALSE,FALSE,FALSE,1,FALSE,5
+);
+
+INSERT INTO OBJECT VALUES (3,'Winchester',
+'Un tipo di fucile a leva a ripetizione manuale di fabbricazione statunitense. Prodotto dalla Winchester Repeating Arms Company prima e dalla U.S. Repeating Arms Company poi.','FUCILE,POMPA,WINCHESTER,Fucile,Pompa,fucile,pompa,winchester',FALSE,TRUE,FALSE,FALSE,FALSE,1,FALSE,5
+);
+
+INSERT INTO OBJECT  VALUES (4,'M-16',
+'M-16: una famiglia di fucili di assalto fabbricata dalla Colts Manufacturing Company e derivata dalla linea AR prodotta dalla Armalite. Adottati in modo ufficiale nel 1967, rimpiazzarono completamente gli M14.',
+'MITRA,MITRAGLIATRICE,M16,Mitra,Mitragliatrice,mitra,mitragliatrice,m16,m-16' , 
+FALSE,TRUE,FALSE,FALSE,FALSE,1,FALSE,5
+);
+
+INSERT INTO OBJECT  VALUES (4,'M-16',
+'M-16: una famiglia di fucili di assalto fabbricata dalla Colts Manufacturing Company e derivata dalla linea AR prodotta dalla Armalite. Adottati in modo ufficiale nel 1967, rimpiazzarono completamente gli M14.',
+'MITRA,MITRAGLIATRICE,M16,Mitra,Mitragliatrice,mitra,mitragliatrice,m16,m-16' , 
+FALSE,TRUE,FALSE,FALSE,FALSE,1,FALSE,5
+);
+
+INSERT INTO OBJECT  VALUES (5,'Botola',
+'Botola:è una solida botola in metallo evidentemente artigianale',
+'BOTOLA,PORTELLO,TOMBINO,Portello,Tombino,botola,portello,tombino' , 
+TRUE,FALSE,FALSE,FALSE,FALSE,NULL,FALSE,5
+);
+
+//______STANZA 1______ [SOGGIORNO]
+
+INSERT INTO OBJECT VALUES (6,'Divano',
+'Divano: un vecchio divano in pelle, faresti miglio a trovarne uno nuovo!', 'DIVANO,SOFA,Sofa,sofa,divano',
+FALSE,FALSE,FALSE,FALSE,FALSE,NULL,FALSE,1
+);
+
+INSERT INTO OBJECT VALUES (7,'TV',
+'TV: una Sony di antiquariato del 2035 ', 'TELEVISORE,TELE,Tele,Tv,Televisore,televisore,tele',
+FALSE,FALSE,FALSE,FALSE,FALSE,NULL,FALSE,1
+);
+
+INSERT INTO OBJECT VALUES (8,'Pareti',
+'Sono solo delle pareti', 'PARETI,PARETE,MURO,MURI,Parete,Muro,Muri,parete,pareti,muro,muri',
+FALSE,FALSE,FALSE,FALSE,FALSE,NULL,FALSE,1
+);
+
+INSERT INTO OBJECT VALUES (9,'Finestre',
+'Sono sbarrate', 'FINESTRE,FINESTRA,Finestra,finestra,finestre',
+FALSE,FALSE,FALSE,FALSE,FALSE,NULL,FALSE,1
+);
+
+INSERT INTO OBJECT VALUES (10,'Assi',
+'Assi in legno fissate con dei pesanti chiodi che faresti bene a non rimuovere', 'ASSI,ASSE,TAVOLE,TAVOLATI,Asse,Tavole,Tavolati,asse,assi,tavolati,tavole',
+FALSE,TRUE,FALSE,FALSE,FALSE,NULL,FALSE,1
+);
+
+INSERT INTO OBJECT VALUES (11,'Foro',
+'Scrutando attraverso la crepa riesci a intravedere quello che sembra essere uno zombie…speriamo non si accorga della finestra rotta!', 'BUCO,FORO,Buco,buco,foro',
+FALSE,FALSE,FALSE,FALSE,FALSE,NULL,FALSE,1
+);
+
+INSERT INTO OBJECT VALUES (12,'Mobile',
+'Un mobile in legno sul quale sono poggiate numerose foto', 'MOBILE,mobile',
+FALSE,FALSE,FALSE,FALSE,FALSE,NULL,FALSE,1
+);
+
+INSERT INTO OBJECT VALUES (13,'Foto',
+'Foto di famiglia raffiguranti quello che sembra essere stato un passato felice','FOTO,FOTOGRAFIE,Fotografie,foto,fotografie',
+FALSE,FALSE,FALSE,FALSE,FALSE,NULL,FALSE,1
+);
+
+INSERT INTO OBJECT VALUES (13,'Foto',
+'Foto di famiglia raffiguranti quello che sembra essere stato un passato felice','FOTO,FOTOGRAFIE,Fotografie,foto,fotografie',
+FALSE,FALSE,FALSE,FALSE,FALSE,NULL,FALSE,1
+);
+
+//______STANZA 3______ [CORRIDOIO]
+
+INSERT INTO OBJECT VALUES (14,'Parquet',
+'Parquet in legno rovere con evidenti segni di usura. La cera delle candele cade incessantemente su di esso','PARQUET,PAVIMENTO,Pavimento,pavimento,parquet',
+FALSE,FALSE,FALSE,FALSE,FALSE,NULL,FALSE,3
+);
+
+INSERT INTO OBJECT VALUES (15,'Candele',
+'Candele in cera bianca molto consumate, a breve andrebbero sostituite','CANDELE,Candele,candele',
+FALSE,FALSE,FALSE,FALSE,FALSE,NULL,FALSE,3
+);
+
+//______STANZA 4______ [CUCINA]
+
+INSERT INTO OBJECT VALUES (16,'Giornale',
+'Giornale: “virus T, mortalità triplicata nelle ultime 72 ore. Gli esperti :<<uccide più del covid-19, morti a quota 250.000 con indice di contagio al 20%>>” datato marzo 2050.','GIORNALE,giornale',
+FALSE,FALSE,FALSE,FALSE,FALSE,NULL,FALSE,4
+);
+
+//______STANZA 6______ [INGRESSO]
+
+INSERT INTO OBJECT VALUES (17,'Appendichiavi',
+'Niente da dire sull’appendichiavi','APPENDICHIAVI,appendichiavi,appendiChiavi',
+FALSE,FALSE,FALSE,FALSE,FALSE,NULL,TRUE,6
+);
+
+INSERT INTO OBJECT VALUES (18,'Chiavi',
+'Queste chiavi servono ad aprire la porta per lo cantinato','CHIAVI,chiavi,CHIAVE,Chiave,chiave',
+FALSE,TRUE,FALSE,FALSE,FALSE,17,FALSE,6
+);
+
+INSERT INTO OBJECT VALUES (19,'Tappetino',
+'Un semplice zerbino da ingresso in finta erbetta sporco di fango: “Welcome Home”.','TAPPETINO,TAPPETO,ZERBINO,Tappeto,Zerbino,tappetino,tappeto,zerbino',
+FALSE,FALSE,FALSE,FALSE,FALSE,NULL,FALSE,6
+);
+
+INSERT INTO OBJECT VALUES (20,'Porta',
+'Una porta blindata, sembra essere anti-sfondamento','PORTA,porta',
+TRUE,FALSE,FALSE,FALSE,FALSE,NULL,FALSE,6
+);
+
+//______STANZA 7______ [GARAGE]
+
+INSERT INTO OBJECT VALUES (21,'Radio',
+'Una vecchia radio impolverata','RADIO,radio',
+FALSE,FALSE,FALSE,FALSE,FALSE,NULL,FALSE,7,'senza antenna'
+);
+
+INSERT INTO OBJECT VALUES (22,'Filo metallico',
+'hai fatto bene a non gettarlo, potrebbe sempre servire a qualcosa','FILO METALLICO,Filo Metallico,filo Metallico,filo,filo metallico',
+FALSE,TRUE,FALSE,FALSE,FALSE,NULL,FALSE,7,NULL
+);
+
+INSERT INTO OBJECT VALUES (23,'Generatore',
+'Generatore di corrente elettrica alimentato a benzina con accensione a corda, targato HONDA.','GENERATORE DI CORRENTE,Generatore di Corrente, generatore di corrente ,Generatore di corrente,GENERATORE,generatore',
+FALSE,FALSE,FALSE,FALSE,FALSE,NULL,FALSE,7,'in moto'
+);
+
+INSERT INTO OBJECT VALUES (24,'Auto',
+'Auto : un pickup Toyota rinforzato con delle lastre di metallo posizionate sulle fiancate e vetri antisfondamento. Ah e non dimentichiamoci dei paraurti rinforzati!','AUTO,AUTOMOBILE,VETTURA,Automobile,Vettura,auto,automobile,vettura',
+FALSE,FALSE,FALSE,FALSE,FALSE,NULL,FALSE,7,'senza benzina'
+);
+
+INSERT INTO OBJECT VALUES (25,'Tanica',
+'Una tanica in plastica di colore rosso','TANICA,LATTINA,Lattina,lattina,tanica',
+FALSE,TRUE,FALSE,FALSE,FALSE,NULL,FALSE,7,'piena'
+);

@@ -5,4 +5,14 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>Textual_Apocallise</name>
   <description>Avventura Testuale su apocallise zombie esame di MAP 2020</description>
+    <dependencies>
+        <dependency>
+      	<groupId>com.h2database</groupId>
+    	<artifactId>h2</artifactId>
+    	<version>1.4.200</version>
+    </dependency>
+    </dependencies>
+
 </project>
+
+  

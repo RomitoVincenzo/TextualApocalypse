@@ -8,10 +8,18 @@ package type;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author pierpaolo
- */
+
+/*abbiamo bisogno di una descrizione completa + oggetti stanza per la prima volta in 
+cui entra in stanza e per comando guarda 
+Quando il giocatore entrerà per la seconda volta nella stessa stanza verrà visualizzata
+una descizione corta + oggetti presenti in stanza con evenutali stati
+La descrizione corta può essere pensata come
+print("Sei nella" + room.getname() + print oggetti in stanza );
+*/
+
+/*
+* getListObject usato per la stampa degli oggetti in stanza.
+* */
 public class Room {
 
     private final int id;
@@ -19,41 +27,32 @@ public class Room {
     private String name;
 
     private String description;
-
-    private String look; 	
     
-    /*abbiamo bisogno di una descrizione completa + oggetti stanza per la prima volta in 
-      cui entra in stanza e per comando guarda 
-      Quando il giocatore entrerà per la seconda volta nella stessa stanza verrà visualizzata
-      una descizione corta + oggetti presenti in stanza con evenutali stati
-      La descrizione corta può essere pensata come
-      print("Sei nella" + room.getname() + print oggetti in stanza );
-      */
-    
-    /*
-     * getListObject usato per la stampa degli oggetti in stanza.
-     * */
-
     private boolean visible = true;
 
-    private Room south = null;
+    private int south;
 
-    private Room north = null;
+    private int north;
 
-    private Room east = null;
+    private int east;
 
-    private Room west = null;
+    private int west;
     
-    private final List<AdvObject> objects=new ArrayList();
+    private int up;
+
+    private int down;
+    
+    private final List<AdvObject> objects = new ArrayList();
 
     public Room(int id) {
         this.id = id;
     }
 
-    public Room(int id, String name, String description) {
+    public Room(int id, String name, String description,boolean visible) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.visible = visible;
     }
 
     public String getName() {
@@ -62,6 +61,10 @@ public class Room {
 
     public void setName(String name) {
         this.name = name;
+    }
+    
+    public int getId() {
+        return id;
     }
 
     public String getDescription() {
@@ -80,38 +83,53 @@ public class Room {
         this.visible = visible;
     }
 
-    public Room getSouth() {
+    public int getSouth() {
         return south;
     }
 
-    public void setSouth(Room south) {
+    public void setSouth(int south) {
         this.south = south;
     }
 
-    public Room getNorth() {
+    public int getNorth() {
         return north;
     }
 
-    public void setNorth(Room north) {
+    public void setNorth(int north) {
         this.north = north;
     }
 
-    public Room getEast() {
+    public int getEast() {
         return east;
     }
 
-    public void setEast(Room east) {
+    public void setEast(int east) {
         this.east = east;
     }
 
-    public Room getWest() {
+    public int getWest() {
         return west;
     }
 
-    public void setWest(Room west) {
+    public void setWest(int west) {
         this.west = west;
     }
 
+    public void setUp(int up) {
+        this.up = up;
+    }
+
+    public int getUp() {
+        return up;
+    }
+    
+    public void setDown(int down) {
+        this.down = down;
+    }
+
+    public int getDown() {
+        return down;
+    }
     public List<AdvObject> getObjects() {
         return objects;
     }
@@ -139,14 +157,6 @@ public class Room {
             return false;
         }
         return true;
-    }
-
-    public String getLook() {
-        return look;
-    }
-
-    public void setLook(String look) {
-        this.look = look;
     }
 
 }

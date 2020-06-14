@@ -26,6 +26,7 @@ public abstract class GameDescription {
     private final List<AdvObject> inventory = new ArrayList();
 
     private Room currentRoom;
+    
 
     public List<Room> getRooms() {
         return rooms;
@@ -50,5 +51,26 @@ public abstract class GameDescription {
     public abstract void init() throws Exception;
 
     public abstract void nextMove(ParserOutput p, PrintStream out);
+    
+    public Room roomById (int id) {
+    	Room room_found = null;
+    	for(Room room : getRooms()) {
+    		if(room.getId()==id)
+    			room_found = room;
+    		}
+    	return room_found;
+    	
+    }
+    
+    public abstract void prologue();
+    
+    public abstract void menu();
+    
+    public abstract void firstScreen();
+    
+    public abstract void loadGame();
+    
+    public abstract void instructions();
+    
 
 }

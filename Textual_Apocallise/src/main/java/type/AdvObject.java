@@ -23,15 +23,17 @@ public class AdvObject {
     
     private Set<String> alias;
 
-    private boolean openable = false;
+    private boolean openable;
 
-    private boolean pickupable = true;
+    private boolean pickupable;
 
-    private boolean pushable = false;
+    private boolean pushable;
 
-    private boolean open = false;
+    private boolean open;
 
-    private boolean push = false;
+    private boolean push;
+            
+    private String specificState;
 
     public AdvObject(int id) {
         this.id = id;
@@ -48,11 +50,18 @@ public class AdvObject {
         this.description = description;
     }
 
-    public AdvObject(int id, String name, String description, Set<String> alias) {
+    public AdvObject(int id, String name, String description, Set<String> alias,boolean openable,boolean pickupable,
+    				boolean pushable,boolean open,boolean push,String specificState) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.alias = alias;
+        this.openable = openable;
+        this.pickupable = pickupable;
+        this.pushable = pushable;
+        this.open = open;
+        this.push = push;
+        this.specificState = specificState;
     }
 
     public String getName() {

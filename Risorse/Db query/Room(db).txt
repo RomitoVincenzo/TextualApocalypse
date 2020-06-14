@@ -1,0 +1,80 @@
+// _____________________COMMENTI_____________________
+
+/*
+   STANZE ID
+     Soggiorno = 1
+     Bagno = 2 
+     Corridoio = 3
+     Cucina = 4
+     Armeria = 5
+     Ingresso = 6
+     Garage = 7
+*/
+
+
+// _____________________ROOM_____________________
+
+CREATE TABLE Room(
+ID INT PRIMARY KEY , 
+NAME VARCHAR(20),
+DESCRIPTION VARCHAR(500) ,
+VISIBLE BOOLEAN ,
+SOUTH INT ,
+NORTH INT ,
+EAST INT ,
+WEST INT ,
+FOREIGN KEY(SOUTH) REFERENCES Room(ID),
+FOREIGN KEY(NORTH) REFERENCES Room(ID),
+FOREIGN KEY(EAST) REFERENCES Room(ID),
+FOREIGN KEY(WEST) REFERENCES Room(ID)
+);
+
+INSERT INTO Room(ID,NAME,DESCRIPTION,VISIBLE) VALUES (1,'Soggiorno',
+'Sei nel soggiorno: la stanza più grande ed accogliente della casa, è qui che passi la maggior parte del tuo tempo. Di fronte al divano, una piccola TV e accanto un mobile con delle foto impolverate. Sulle pareti, finestre sbarrate da massicci assi di legno, ad accezione di una, che presenta un foro dal quale la luce solare scalda delicatamente l’ambiente.',
+TRUE
+);
+
+INSERT INTO Room(ID,NAME,DESCRIPTION,VISIBLE) VALUES (2,'Bagno',
+'Sei nel bagno: una piccola stanza con nulla di inusuale. Non ti preoccupare non vedo telecamere in giro.',
+TRUE
+);
+
+INSERT INTO Room(ID,NAME,DESCRIPTION,VISIBLE) VALUES (3,'Corridoio',
+'Sei nel corridoio: un ambiente di passaggio e di comunicazione tra le varie stanze della casa. Quel poco di visibilità è dato da candele poste delle mura laterali che con la loro luce non riescono a raggiungere la parte centrale della stanza: non si riescono a trovare quasi più lampadine funzionanti oramai. Il parquet che un tempo veniva curato con molta attenzione da tua moglie è ormai ricoperto di cera che lo rende estremamente appiccicoso. Le mura e il soffitto sono a malapena distinguibili per la scarsa luce.',
+TRUE
+);
+
+
+INSERT INTO Room(ID,NAME,DESCRIPTION,VISIBLE) VALUES (4,'Cucina',
+'Sei nella cucina: dinanzi a te un cucina in stile Americano. Al centro della stanza, una penisola con al di sopra quello che sembra essere un giornale in carta stampata.',
+TRUE
+);
+
+INSERT INTO Room(ID,NAME,DESCRIPTION,VISIBLE) VALUES (5,'Armeria',
+'Sei nell’armeria: questa stanza, originariamente un ripostiglio, è stata adibita ad armeria in seguito alla pandemia e modificata in modo tale da accedere al garage mediante una botola posta centralmente. La parete è ricoperta da griglie metalliche utilizzate per riporre il tuo arsenale. In giro per la stanza caricatori vuoti e ricoperti di sangue…che sia quello dei non morti ?!',
+TRUE
+);
+
+INSERT INTO Room(ID,NAME,DESCRIPTION,VISIBLE) VALUES (6,'Ingresso',
+'Sei nell’ingresso: difronte a te una porta che conduce all’esterno della casa, ai suoi piedi un tappetino con su scritto “Welcome Home”(meglio essere cordiale con questi zombie). Noti anche un appendi chiavi in stile retrò sulla parete alla tua sinistra.',
+TRUE
+);
+
+INSERT INTO Room(ID,NAME,DESCRIPTION,VISIBLE) VALUES (7,'Garage',
+'Sei nel garage: una piccola stanza di circa 50 mq illuminata parzialmente da un neon danneggiato posto alla sua sommità, con pareti e pavimento in cemento grezzo. La maggior parte dello spazio è occupato dalla tua auto. Accanto al veicolo vi è un tavolo da lavoro in legno con al di sopra una vecchia radio. Guardando al di sotto del piano vi è un generatore di corrente elettrica che serve ad alimentare l’intera abitazione.',
+TRUE
+);
+
+UPDATE ROOM SET SOUTH =2 ,NORTH=NULL , EAST=3 , WEST= NULL, UP=NULL, DOWN=NULL  WHERE ID=1;
+
+UPDATE ROOM SET NORTH=1 WHERE ID=2;
+
+UPDATE ROOM SET SOUTH=6 ,NORTH=5 , EAST=4 , WEST= 1, UP=NULL, DOWN=NULL  WHERE ID=3;
+
+UPDATE ROOM SET WEST= 3 WHERE ID=4;
+
+UPDATE ROOM SET SOUTH=3 ,NORTH=null , EAST=null , WEST= null, UP=NULL, DOWN=7 WHERE ID=5;
+
+UPDATE ROOM SET SOUTH=null ,NORTH=3 , EAST=null , WEST= null, UP=NULL, DOWN=null WHERE ID=6;
+
+UPDATE ROOM SET SOUTH=null ,NORTH=null , EAST=null , WEST= null, UP=5, DOWN=null WHERE ID=7;

@@ -5,11 +5,21 @@
  */
 package adventure;
 
-import games.FireHouseGame;
+import games.TextualApocalypse;
 import parser.Parser;
 import parser.ParserOutput;
 import type.CommandType;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.Properties;
 import java.util.Scanner;
+
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * ATTENZIONE: l'Engine e' molto spartano, in realta'  demanda la logica alla
@@ -35,6 +45,9 @@ public class Engine {
     }
 
     public void run() {
+    	game.firstScreen();
+    	game.menu();
+    	//logica menu
         System.out.println(game.getCurrentRoom().getName());
         System.out.println("================================================");
         System.out.println(game.getCurrentRoom().getDescription());
@@ -54,9 +67,10 @@ public class Engine {
 
     /**
      * @param args the command line arguments
+     * @throws Exception 
      */
-    public static void main(String[] args) {
-        Engine engine = new Engine(new FireHouseGame());
+    public static void main(String[] args) throws Exception {
+        Engine engine = new Engine(new TextualApocalypse());
         engine.run();
     }
 
