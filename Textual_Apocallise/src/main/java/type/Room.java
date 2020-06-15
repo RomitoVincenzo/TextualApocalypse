@@ -42,6 +42,8 @@ public class Room {
 
     private int down;
     
+    private int visited; //count visite in stanza
+    
     private final List<AdvObject> objects = new ArrayList();
 
     public Room(int id) {
@@ -53,6 +55,7 @@ public class Room {
         this.name = name;
         this.description = description;
         this.visible = visible;
+        visited = 0;
     }
 
     public String getName() {
@@ -130,6 +133,14 @@ public class Room {
     public int getDown() {
         return down;
     }
+    
+    public void setVisited(int visited) {
+        this.visited = visited;
+    }
+
+    public int getVisited() {
+        return visited;
+    }
     public List<AdvObject> getObjects() {
         return objects;
     }
@@ -158,5 +169,55 @@ public class Room {
         }
         return true;
     }
-
+    
+    
+    public boolean objectInRoom (AdvObject object) {
+    	boolean flag = false;
+    	for(AdvObject obj : getObjects()) {
+    		if(obj.getId() == object.getId())
+    			flag=true;
+    		}
+    	return flag;
+    }
+    
+    public AdvObjectContainer objectContainer (AdvObject object) {
+    	AdvObjectContainer container = null;
+    	for(AdvObject obj : getObjects()) {
+    		if(obj instanceof AdvObjectContainer) {
+    		 	for(AdvObject obj2 : ((AdvObjectContainer) obj).getList()) {
+    		 		if(obj2.getId() ==  object.getId()) {
+    		 			container = (AdvObjectContainer) obj;
+    		 		}
+    		 	}
+    		}
+    	}
+    	return container;
+    }
+    
+    public List<AdvObject> getContainedObjects() {
+    	List<AdvObject> list = new ArrayList();
+    	for(AdvObject obj : getObjects()) {
+    		if(obj instanceof AdvObjectContainer) {
+    			for(AdvObject obj2 : ((AdvObjectContainer) obj).getList()) {
+    				list.add(obj2);
+    			}
+    		}
+    	}
+    	return list;
+    }
+    
+    public List<AdvObject> interactiveObjects() {
+    	List<AdvObject> list = new ArrayList();
+    	for(AdvObject obj : getObjects()) {
+    		if(obj.isOpenable()==true || obj.isPickupable()==true || obj.isPushable() || obj.getSpecificState()!=null)
+    			list.add(obj);
+    	     if(obj instanceof AdvObjectContainer && obj.isOpen()==true) {
+    			for(AdvObject obj2 : ((AdvObjectContainer) obj).getList()) {
+    	    		if(obj2.isOpenable()==true || obj2.isPickupable()==true || obj2.isPushable() || obj2.getSpecificState()!=null)
+    	    			list.add(obj2);
+    			}
+    		}
+    	}
+    	return list;
+    }
 }

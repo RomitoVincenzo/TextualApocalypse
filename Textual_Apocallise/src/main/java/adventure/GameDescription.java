@@ -62,6 +62,18 @@ public abstract class GameDescription {
     	
     }
     
+    public boolean objectInInventory (AdvObject object) {
+    	boolean flag = false;
+    	for(AdvObject obj : getInventory()) {
+    		if(obj.getId() == object.getId())
+    			flag=true;
+    		}
+    	return flag;
+    	
+    }
+    
+    
+    
     public abstract void prologue();
     
     public abstract void menu();

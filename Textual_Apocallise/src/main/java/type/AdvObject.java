@@ -131,6 +131,14 @@ public class AdvObject {
     public void setAlias(String[] alias) {
         this.alias = new HashSet(Arrays.asList(alias));
     }
+    
+    public void setSpecificState(String name) {
+        this.name = name;
+    }
+
+    public String getSpecificState() {
+        return description;
+    }
 
     public int getId() {
         return id;

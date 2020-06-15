@@ -9,10 +9,6 @@ import type.AdvObject;
 import type.Command;
 import java.util.List;
 
-/**
- *
- * @author pierpaolo
- */
 public class Parser {
 
     private int checkForCommand(String token, List<Command> commands) {

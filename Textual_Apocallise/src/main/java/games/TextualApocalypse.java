@@ -44,7 +44,7 @@ public class TextualApocalypse extends GameDescription {
 
     @Override
     public void init() throws Exception {    	
-    		prologue();
+    		//prologue();
     		try{
 	    			Properties dbprops = new Properties();
 	    			dbprops.setProperty("user", "user");
@@ -81,7 +81,7 @@ public class TextualApocalypse extends GameDescription {
     	                	 while(rs3.next()){
 		                	     String[] parts2 = rs3.getString(4).split(",");	
 		                	     Set<String> set2 = new HashSet(Arrays.asList(parts2));
-	    	                	 cont.add(new AdvObject(rs3.getInt(1), rs3.getString(2), rs3.getString(3), set,rs3.getBoolean(5),rs3.getBoolean(6),
+	    	                	 cont.add(new AdvObject(rs3.getInt(1), rs3.getString(2), rs3.getString(3), set2,rs3.getBoolean(5),rs3.getBoolean(6),
           				               rs3.getBoolean(7),rs3.getBoolean(8),rs3.getBoolean(9),rs3.getString(13)));
 	    	    			 }
 	    	                 rs3.close();
@@ -91,8 +91,8 @@ public class TextualApocalypse extends GameDescription {
 	                	 else {
 	                		 //non container
 	                	     String[] parts3 = rs2.getString(4).split(",");	
-	                	     Set<String> set = new HashSet(Arrays.asList(parts3));
-	                		 room.getObjects().add(new AdvObject(rs2.getInt(1), rs2.getString(2), rs2.getString(3), set,rs2.getBoolean(5),rs2.getBoolean(6),
+	                	     Set<String> set3 = new HashSet(Arrays.asList(parts3));
+	                		 room.getObjects().add(new AdvObject(rs2.getInt(1), rs2.getString(2), rs2.getString(3), set3,rs2.getBoolean(5),rs2.getBoolean(6),
 	                				               rs2.getBoolean(7),rs2.getBoolean(8),rs2.getBoolean(9),rs2.getString(13)));
 	                	 }   	 
 	                 }
@@ -114,13 +114,14 @@ public class TextualApocalypse extends GameDescription {
 	            pstm4.close();
 	            //set starting room
 	            setCurrentRoom(roomById(1));
+	            getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
     		}catch (SQLException ex){
     			System.err.println(ex.getSQLState() + ": " + ex.getMessage());
     		}
-    	}      
-   
+    	}   
+    
     @Override
-    public void nextMove(ParserOutput p, PrintStream out) {/*
+    public void nextMove(ParserOutput p, PrintStream out) {
         if (p.getCommand() == null) {
             out.println("Non ho capito cosa devo fare! Prova con un altro comando.");
         } else {
@@ -128,69 +129,85 @@ public class TextualApocalypse extends GameDescription {
             boolean noroom = false;
             boolean move = false;
             if (p.getCommand().getType() == CommandType.NORD) {
-                if (getCurrentRoom().getNorth() != null) {
-                    setCurrentRoom(getCurrentRoom().getNorth());
+                if (getCurrentRoom().getNorth() != 0) {
+                    setCurrentRoom(roomById(getCurrentRoom().getNorth()));
+                    getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
                     move = true;
                 } else {
                     noroom = true;
                 }
             } else if (p.getCommand().getType() == CommandType.SOUTH) {
-                if (getCurrentRoom().getSouth() != null) {
-                    setCurrentRoom(getCurrentRoom().getSouth());
+                if (getCurrentRoom().getSouth() != 0) {
+                	setCurrentRoom(roomById(getCurrentRoom().getSouth()));
+                	getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
                     move = true;
                 } else {
                     noroom = true;
                 }
             } else if (p.getCommand().getType() == CommandType.EAST) {
-                if (getCurrentRoom().getEast() != null) {
-                    setCurrentRoom(getCurrentRoom().getEast());
+                if (getCurrentRoom().getEast() != 0) {
+                	setCurrentRoom(roomById(getCurrentRoom().getEast()));
+                	getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
                     move = true;
                 } else {
                     noroom = true;
                 }
             } else if (p.getCommand().getType() == CommandType.WEST) {
-                if (getCurrentRoom().getWest() != null) {
-                    setCurrentRoom(getCurrentRoom().getWest());
+                if (getCurrentRoom().getWest() != 0) {
+                	setCurrentRoom(roomById(getCurrentRoom().getWest()));
+                	getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
                     move = true;
                 } else {
                     noroom = true;
-                }
+                }    
             } else if (p.getCommand().getType() == CommandType.INVENTORY) {
-                out.println("Nel tuo inventario ci sono:");
+                out.println("Nel tuo inventario ci sono: ");
                 for (AdvObject o : getInventory()) {
-                    out.println(o.getName() + ": " + o.getDescription());
+                    out.println(o.getName());
+                    if(o.getSpecificState() != null)
+                    	out.println(" "+o.getSpecificState());
                 }
-            } else if (p.getCommand().getType() == CommandType.LOOK_AT) {
-                if (getCurrentRoom().getLook() != null) {
-                    out.println(getCurrentRoom().getLook());
-                } else {
-                    out.println("Non c'Ã¨ niente di interessante qui.");
-                }
+            } else if (p.getCommand().getType() == CommandType.LOOK_AT && p.getObject() == null) {
+            	out.println(getCurrentRoom().getDescription());
+            	for (AdvObject obj : getCurrentRoom().interactiveObjects()) {
+            		//////////23456789opè
+            		out.println("Vedo "+ obj.getName());
+            	}
+            } else if (p.getCommand().getType() == CommandType.LOOK_AT && p.getObject() != null) {
+            	if (objectInInventory(p.getObject()) || getCurrentRoom().objectInRoom(p.getObject())) {
+            		out.println(p.getObject().getDescription());
+            	} else if(getCurrentRoom().objectContainer(p.getObject()) != null) {
+            		if(getCurrentRoom().objectContainer(p.getObject()).isOpen()) {
+            			out.println(p.getObject().getDescription());	
+            		}
+            	} else 
+            		out.println("Non vedo questo oggetto");             		
             } else if (p.getCommand().getType() == CommandType.PICK_UP) {
-                if (p.getObject() != null) {
+                if (p.getObject() != null && getCurrentRoom().objectInRoom(p.getObject())) {
                     if (p.getObject().isPickupable()) {
                         getInventory().add(p.getObject());
                         getCurrentRoom().getObjects().remove(p.getObject());
-                        out.println("Hai raccolto: " + p.getObject().getDescription());
-                    } else {
-                        out.println("Non puoi raccogliere questo oggetto.");
+                        out.println("Hai raccolto: " + p.getObject().getName());
                     }
+                } else if (p.getObject() != null && getCurrentRoom().objectContainer(p.getObject()) != null) {
+                	if(getCurrentRoom().objectContainer(p.getObject()).isOpen()) {
+                		if (p.getObject().isPickupable()) {
+                            getInventory().add(p.getObject());
+                            getCurrentRoom().getObjects().remove(p.getObject());
+                            out.println("Hai raccolto: " + p.getObject().getName());
+                		}
+                	}
                 } else {
-                    out.println("Non c'Ã¨ niente da raccogliere qui.");
+                    out.println("Non c'e' niente da raccogliere qui.");
                 }
-            } else if (p.getCommand().getType() == CommandType.OPEN) {
-                /*ATTENZIONE: quando un oggetto contenitore viene aperto, tutti gli oggetti contenuti
-                * vengongo inseriti nella stanza o nell'inventario a seconda di dove si trova l'oggetto contenitore.
-                * Questa soluzione NON va bene poichÃ© quando un oggetto contenitore viene richiuso Ã¨ complicato
-                * non rendere piÃ¹ disponibili gli oggetti contenuti rimuovendoli dalla stanza o dall'invetario.
-                * Trovare altra soluzione.
-                 
+            } else if (p.getCommand().getType() == CommandType.OPEN) {     
                 if (p.getObject() == null && p.getInvObject() == null) {
-                    out.println("Non c'Ã¨ niente da aprire qui.");
+                    out.println("Non c'e' niente da aprire qui.");
                 } else {
                     if (p.getObject() != null) {
                         if (p.getObject().isOpenable() && p.getObject().isOpen() == false) {
                             if (p.getObject() instanceof AdvObjectContainer) {
+                                p.getObject().setOpen(true);
                                 out.println("Hai aperto: " + p.getObject().getName());
                                 AdvObjectContainer c = (AdvObjectContainer) p.getObject();
                                 if (!c.getList().isEmpty()) {
@@ -198,9 +215,7 @@ public class TextualApocalypse extends GameDescription {
                                     Iterator<AdvObject> it = c.getList().iterator();
                                     while (it.hasNext()) {
                                         AdvObject next = it.next();
-                                        getCurrentRoom().getObjects().add(next);
                                         out.print(" " + next.getName());
-                                        it.remove();
                                     }
                                     out.println();
                                 }
@@ -212,7 +227,8 @@ public class TextualApocalypse extends GameDescription {
                             out.println("Non puoi aprire questo oggetto.");
                         }
                     }
-                    if (p.getInvObject() != null) {
+                    //APRIRE OGGETTI CONETENUTI IN INVENTARIO
+                    /*if (p.getInvObject() != null) {
                         if (p.getInvObject().isOpenable() && p.getInvObject().isOpen() == false) {
                             if (p.getInvObject() instanceof AdvObjectContainer) {
                                 AdvObjectContainer c = (AdvObjectContainer) p.getInvObject();
@@ -234,32 +250,37 @@ public class TextualApocalypse extends GameDescription {
                         } else {
                             out.println("Non puoi aprire questo oggetto.");
                         }
-                    }
+                    }*/
                 }
             } else if (p.getCommand().getType() == CommandType.PUSH) {
                 //ricerca oggetti pushabili
-                if (p.getObject() != null && p.getObject().isPushable()) {
+                if (p.getObject() != null && p.getObject().isPushable() && getCurrentRoom().objectInRoom(p.getObject())) {
                     out.println("Hai premuto: " + p.getObject().getName());
+                    //AZIONE SU OGGETTI TRAMITE ID
+                    /*
                     if (p.getObject().getId() == 3) {
                         end(out);
-                    }
-                } else if (p.getInvObject() != null && p.getInvObject().isPushable()) {
+                    }*/
+                }//premere oggetto in inventario
+                /* else if (p.getInvObject() != null && p.getInvObject().isPushable()) {
                     out.println("Hai premuto: " + p.getInvObject().getName());
                     if (p.getInvObject().getId() == 3) {
                         end(out);
-                    }
+                    }*/
                 } else {
                     out.println("Non ci sono oggetti che puoi premere qui.");
                 }
-            }
             if (noroom) {
-                out.println("Da quella parte non si puÃ² andare c'Ã¨ un muro! Non hai ancora acquisito i poteri per oltrepassare i muri...");
+                out.println("Da quella parte non si puo' andare c'e' un muro!");
             } else if (move) {
-                out.println(getCurrentRoom().getName());
-                out.println("================================================");
+            	if (getCurrentRoom().getVisited() >1) {
+            		out.print("Sei in ");
+                    out.println(getCurrentRoom().getName());
+            	}else {
                 out.println(getCurrentRoom().getDescription());
+            	}
             }
-        }*/
+        }
     }
 
     private void end(PrintStream out) {
@@ -270,27 +291,31 @@ public class TextualApocalypse extends GameDescription {
     public void firstScreen() {
     	System.out.println();
     	System.out.println();
-    	System.out.println();
-    	System.out.println("'  ▄▄▄█████▓█████▒██   ██▄▄▄█████▓█    ██ ▄▄▄      ██▓                                 \r\n" + 
-    			"'  ▓  ██▒ ▓▓█   ▀▒▒ █ █ ▒▓  ██▒ ▓▒██  ▓██▒████▄   ▓██▒                                 \r\n" + 
-    			"'  ▒ ▓██░ ▒▒███  ░░  █   ▒ ▓██░ ▒▓██  ▒██▒██  ▀█▄ ▒██░                                 \r\n" + 
-    			"'  ░ ▓██▓ ░▒▓█  ▄ ░ █ █ ▒░ ▓██▓ ░▓▓█  ░██░██▄▄▄▄██▒██░                                 \r\n" + 
-    			"'    ▒██▒ ░░▒████▒██▒ ▒██▒ ▒██▒ ░▒▒█████▓ ▓█   ▓██░██████▒                             \r\n" + 
-    			"'    ▒ ░░  ░░ ▒░ ▒▒ ░ ░▓ ░ ▒ ░░  ░▒▓▒ ▒ ▒ ▒▒   ▓▒█░ ▒░▓  ░                             \r\n" + 
-    			"'      ░    ░ ░  ░░   ░▒ ░   ░   ░░▒░ ░ ░  ▒   ▒▒ ░ ░ ▒  ░                             \r\n" + 
-    			"'    ░        ░   ░    ░   ░      ░░░ ░ ░  ░   ▒    ░ ░                                \r\n" + 
-    			"'            ▄▄▄ ░░   ██▓███  ▒█████░ ▄████▄  ▄▄▄ ░   ░██▓    ██▓██▓███   ██████▓█████ \r\n" + 
-    			"'           ▒████▄   ▓██░  ██▒██▒  ██▒██▀ ▀█ ▒████▄   ▓██▒   ▓██▓██░  ██▒██    ▒▓█   ▀ \r\n" + 
-    			"'           ▒██  ▀█▄ ▓██░ ██▓▒██░  ██▒▓█    ▄▒██  ▀█▄ ▒██░   ▒██▓██░ ██▓░ ▓██▄  ▒███   \r\n" + 
-    			"'           ░██▄▄▄▄██▒██▄█▓▒ ▒██   ██▒▓▓▄ ▄██░██▄▄▄▄██▒██░   ░██▒██▄█▓▒ ▒ ▒   ██▒▓█  ▄ \r\n" + 
-    			"'            ▓█   ▓██▒██▒ ░  ░ ████▓▒▒ ▓███▀ ░▓█   ▓██░██████░██▒██▒ ░  ▒██████▒░▒████▒\r\n" + 
-    			"'            ▒▒   ▓▒█▒▓▒░ ░  ░ ▒░▒░▒░░ ░▒ ▒  ░▒▒   ▓▒█░ ▒░▓  ░▓ ▒▓▒░ ░  ▒ ▒▓▒ ▒ ░░ ▒░ ░\r\n" + 
-    			"'             ▒   ▒▒ ░▒ ░      ░ ▒ ▒░  ░  ▒    ▒   ▒▒ ░ ░ ▒  ░▒ ░▒ ░    ░ ░▒  ░ ░░ ░  ░\r\n" + 
-    			"'             ░   ▒  ░░      ░ ░ ░ ▒ ░         ░   ▒    ░ ░   ▒ ░░      ░  ░  ░    ░   \r\n" + 
-    			"'                 ░  ░           ░ ░ ░ ░           ░  ░   ░  ░░               ░    ░  ░\r\n" + 
-    			"'                                    ░                                                ");
-    	
-    }
+    	System.out.print("      ╔═══╗           \r\n" + 
+    			"      ║► ◄║\r\n" + 
+    			"   ╔═╗╚═══╝╔═╗\r\n" + 
+    			"╔══════════════════════════════════════════════════════════════════════════════════════\r\n" + 
+    			"║    \r\n" + 
+    			"║    ▄▄▄█████▓█████▒██   ██▄▄▄█████▓█    ██ ▄▄▄      ██▓                                  ╔═══╗\r\n" + 
+    			"║    ▓  ██▒ ▓▓█   ▀▒▒ █ █ ▒▓  ██▒ ▓▒██  ▓██▒████▄   ▓██▒                                  ║× ×║\r\n" + 
+    			"║    ▒ ▓██░ ▒▒███  ░░  █   ▒ ▓██░ ▒▓██  ▒██▒██  ▀█▄ ▒██░                               ╔═╗╚═══╝╔═╗  \r\n" + 
+    			"║    ░ ▓██▓ ░▒▓█  ▄ ░ █ █ ▒░ ▓██▓ ░▓▓█  ░██░██▄▄▄▄██▒██░                               ╚═╝  ▒  ╚═╝ \r\n" + 
+    			"║      ▒██▒ ░░▒████▒██▒ ▒██▒ ▒██▒ ░▒▒█████▓ ▓█   ▓██░██████▒                              ╚   ╝ \r\n" + 
+    			"║      ▒ ░░  ░░ ▒░ ▒▒ ░ ░▓ ░ ▒ ░░  ░▒▓▒ ▒ ▒ ▒▒   ▓▒█░ ▒░▓  ░                              ║ _ ║\r\n" + 
+    			"║        ░    ░ ░  ░░   ░▒ ░   ░   ░░▒░ ░ ░  ▒   ▒▒ ░ ░ ▒  ░                              ╚╝ ╚╝ \r\n" + 
+    			"║      ░        ░   ░    ░   ░      ░░░ ░ ░  ░   ▒    ░ ░                                       \r\n" + 
+    			"║              ▄▄▄ ░░   ██▓███  ▒█████░ ▄████▄  ▄▄▄ ░   ░██▓    ██▓██▓███   ██████▓█████          \r\n" + 
+    			"║             ▒████▄   ▓██░  ██▒██▒  ██▒██▀ ▀█ ▒████▄   ▓██▒   ▓██▓██░  ██▒██    ▒▓█   ▀      ║\r\n" + 
+    			"║             ▒██  ▀█▄ ▓██░ ██▓▒██░  ██▒▓█    ▄▒██  ▀█▄ ▒██░   ▒██▓██░ ██▓░ ▓██▄  ▒███        ║\r\n" + 
+    			"║             ░██▄▄▄▄██▒██▄█▓▒ ▒██   ██▒▓▓▄ ▄██░██▄▄▄▄██▒██░   ░██▒██▄█▓▒ ▒ ▒   ██▒▓█  ▄      ║\r\n" + 
+    			"║              ▓█   ▓██▒██▒ ░  ░ ████▓▒▒ ▓███▀ ░▓█   ▓██░██████░██▒██▒ ░  ▒██████▒░▒████▒     ║\r\n" + 
+    			"║              ▒▒   ▓▒█▒▓▒░ ░  ░ ▒░▒░▒░░ ░▒ ▒  ░▒▒   ▓▒█░ ▒░▓  ░▓ ▒▓▒░ ░  ▒ ▒▓▒ ▒ ░░ ▒░ ░     ║\r\n" + 
+    			"║               ▒   ▒▒ ░▒ ░      ░ ▒ ▒░  ░  ▒    ▒   ▒▒ ░ ░ ▒  ░▒ ░▒ ░    ░ ░▒  ░ ░░ ░  ░     ║\r\n" + 
+    			"║               ░   ▒  ░░      ░ ░ ░ ▒ ░         ░   ▒    ░ ░   ▒ ░░      ░  ░  ░    ░        ║\r\n" + 
+    			"                   ░  ░           ░ ░ ░ ░           ░  ░   ░  ░░               ░    ░         ║\r\n" + 
+    			"                                                                                              ║\r\n" + 
+    			"                                ══════════════════════════════════════════════════════════════╝                                                                                                                                 ");
+    	}
     
     public void menu() {
     	//inserire copyright
@@ -372,4 +397,5 @@ public class TextualApocalypse extends GameDescription {
      Ingresso = 6
      Garage = 7
      
-    */
+    */ 	
+

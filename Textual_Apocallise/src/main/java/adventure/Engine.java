@@ -8,10 +8,14 @@ package adventure;
 import games.TextualApocalypse;
 import parser.Parser;
 import parser.ParserOutput;
+import type.AdvObject;
 import type.CommandType;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -45,23 +49,26 @@ public class Engine {
     }
 
     public void run() {
-    	game.firstScreen();
-    	game.menu();
+    	//game.firstScreen();
+    	
+    	//game.menu();
     	//logica menu
-        System.out.println(game.getCurrentRoom().getName());
-        System.out.println("================================================");
         System.out.println(game.getCurrentRoom().getDescription());
+        System.out.print("\n Cosa devo fare ? ");
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
             String command = scanner.nextLine();
-            ParserOutput p = parser.parse(command, game.getCommands(), game.getCurrentRoom().getObjects(), game.getInventory());
+            List<AdvObject> list =  game.getCurrentRoom().getObjects();
+            list.addAll(game.getCurrentRoom().getContainedObjects());
+            ParserOutput p = parser.parse(command, game.getCommands(),list, game.getInventory());
             if (p.getCommand() != null && p.getCommand().getType() == CommandType.END) {
                 System.out.println("Addio!");
                 break;
             } else {
                 game.nextMove(p, System.out);
-                System.out.println("================================================");
             }
+            System.out.print("\n Cosa devo fare ? ");
+            
         }
     }
 
@@ -75,3 +82,36 @@ public class Engine {
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
