@@ -43,7 +43,7 @@ public class Room {
     private int down;
     
     private int visited; //count visite in stanza
-    
+        
     private final List<AdvObject> objects = new ArrayList();
 
     public Room(int id) {
@@ -209,12 +209,14 @@ public class Room {
     public List<AdvObject> interactiveObjects() {
     	List<AdvObject> list = new ArrayList();
     	for(AdvObject obj : getObjects()) {
-    		if(obj.isOpenable()==true || obj.isPickupable()==true || obj.isPushable() || obj.getSpecificState()!=null)
+    		if(obj.isOpenable()==true || obj.isPickupable()==true || obj.isPushable()==true || obj.getSpecificState().equals(null)) {
     			list.add(obj);
+    		}
     	     if(obj instanceof AdvObjectContainer && obj.isOpen()==true) {
     			for(AdvObject obj2 : ((AdvObjectContainer) obj).getList()) {
-    	    		if(obj2.isOpenable()==true || obj2.isPickupable()==true || obj2.isPushable() || obj2.getSpecificState()!=null)
+    	    		if(obj2.isOpenable()==true || obj2.isPickupable()==true || obj2.isPushable()==true || obj2.getSpecificState().equals(null)) {
     	    			list.add(obj2);
+    	    		}
     			}
     		}
     	}

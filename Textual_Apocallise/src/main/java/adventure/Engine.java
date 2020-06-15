@@ -53,12 +53,16 @@ public class Engine {
     	
     	//game.menu();
     	//logica menu
-        System.out.println(game.getCurrentRoom().getDescription());
-        System.out.print("\n Cosa devo fare ? ");
+        System.out.println(game.getCurrentRoom().getDescription()+"\n");
+    	for (AdvObject obj : game.getCurrentRoom().interactiveObjects()) 
+    		System.out.println("Vedo "+obj.getArticle()+" "+obj.getName());
+        System.out.print("\n  Cosa devo fare ? ");
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
+        	System.out.println();
             String command = scanner.nextLine();
-            List<AdvObject> list =  game.getCurrentRoom().getObjects();
+            List<AdvObject> list = new ArrayList();
+            list.addAll(game.getCurrentRoom().getObjects());
             list.addAll(game.getCurrentRoom().getContainedObjects());
             ParserOutput p = parser.parse(command, game.getCommands(),list, game.getInventory());
             if (p.getCommand() != null && p.getCommand().getType() == CommandType.END) {
@@ -67,7 +71,7 @@ public class Engine {
             } else {
                 game.nextMove(p, System.out);
             }
-            System.out.print("\n Cosa devo fare ? ");
+            System.out.print("\n  Cosa devo fare ? ");
             
         }
     }

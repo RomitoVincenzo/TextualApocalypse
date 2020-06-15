@@ -34,6 +34,8 @@ public class AdvObject {
     private boolean push;
             
     private String specificState;
+    
+    private String article;
 
     public AdvObject(int id) {
         this.id = id;
@@ -51,7 +53,7 @@ public class AdvObject {
     }
 
     public AdvObject(int id, String name, String description, Set<String> alias,boolean openable,boolean pickupable,
-    				boolean pushable,boolean open,boolean push,String specificState) {
+    				boolean pushable,boolean open,boolean push,String specificState,String article) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -62,6 +64,7 @@ public class AdvObject {
         this.open = open;
         this.push = push;
         this.specificState = specificState;
+        this.article = article;
     }
 
     public String getName() {
@@ -143,6 +146,11 @@ public class AdvObject {
     public int getId() {
         return id;
     }
+    
+    public String getArticle() {
+        return article;
+    }
+
 
     @Override
     public int hashCode() {

@@ -30,8 +30,8 @@ public class AdvObjectContainer extends AdvObject {
     }
 
     public AdvObjectContainer(int id, String name, String description, Set<String> alias,boolean openable,boolean pickupable,
-			boolean pushable,boolean open,boolean push,String specificState) {
-        super(id,name,description,alias,openable,pickupable,pushable,open,push,specificState);
+			boolean pushable,boolean open,boolean push,String specificState,String article) {
+        super(id,name,description,alias,openable,pickupable,pushable,open,push,specificState,article);
     }
 
     public List<AdvObject> getList() {

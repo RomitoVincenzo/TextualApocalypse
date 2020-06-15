@@ -74,7 +74,7 @@ public class TextualApocalypse extends GameDescription {
 	                		 String[] parts = rs2.getString(4).split(",");	
 	                		 Set<String> set = new HashSet(Arrays.asList(parts));
 	                		 AdvObjectContainer cont = new AdvObjectContainer(rs2.getInt(1), rs2.getString(2), rs2.getString(3), set,rs2.getBoolean(5),rs2.getBoolean(6),
-	                				                                          rs2.getBoolean(7),rs2.getBoolean(8),rs2.getBoolean(9),rs2.getString(13));
+	                				                                          rs2.getBoolean(7),rs2.getBoolean(8),rs2.getBoolean(9),rs2.getString(13),rs2.getString(14));
 	     	                 PreparedStatement pstm3 = conn.prepareStatement("SELECT * FROM Object WHERE Container=?");
     	                	 pstm3.setInt(1,rs2.getInt(1));
     	                	 rs3 = pstm3.executeQuery();
@@ -82,18 +82,18 @@ public class TextualApocalypse extends GameDescription {
 		                	     String[] parts2 = rs3.getString(4).split(",");	
 		                	     Set<String> set2 = new HashSet(Arrays.asList(parts2));
 	    	                	 cont.add(new AdvObject(rs3.getInt(1), rs3.getString(2), rs3.getString(3), set2,rs3.getBoolean(5),rs3.getBoolean(6),
-          				               rs3.getBoolean(7),rs3.getBoolean(8),rs3.getBoolean(9),rs3.getString(13)));
+          				               rs3.getBoolean(7),rs3.getBoolean(8),rs3.getBoolean(9),rs3.getString(13),rs3.getString(14)));
 	    	    			 }
 	    	                 rs3.close();
 	    	                 pstm3.close();
 	                		 room.getObjects().add(cont);
-	                	 }
-	                	 else {
-	                		 //non container
+	                	
+	                	 } else if(rs2.getInt(10)==0) {
+	                		 //non container e non contenuto
 	                	     String[] parts3 = rs2.getString(4).split(",");	
 	                	     Set<String> set3 = new HashSet(Arrays.asList(parts3));
 	                		 room.getObjects().add(new AdvObject(rs2.getInt(1), rs2.getString(2), rs2.getString(3), set3,rs2.getBoolean(5),rs2.getBoolean(6),
-	                				               rs2.getBoolean(7),rs2.getBoolean(8),rs2.getBoolean(9),rs2.getString(13)));
+	                				               rs2.getBoolean(7),rs2.getBoolean(8),rs2.getBoolean(9),rs2.getString(13),rs2.getString(14)));
 	                	 }   	 
 	                 }
 	                 rs2.close();
@@ -161,27 +161,29 @@ public class TextualApocalypse extends GameDescription {
                     noroom = true;
                 }    
             } else if (p.getCommand().getType() == CommandType.INVENTORY) {
-                out.println("Nel tuo inventario ci sono: ");
-                for (AdvObject o : getInventory()) {
-                    out.println(o.getName());
-                    if(o.getSpecificState() != null)
-                    	out.println(" "+o.getSpecificState());
+            	if(getInventory().isEmpty())
+            		out.println("Il inventario e' vuoto ");
+            	else
+            	{
+	                out.println("Nel tuo inventario ci sono: ");
+	                for (AdvObject o : getInventory()) {
+	                    out.println(o.getName());
+	                    if(o.getSpecificState() != null)
+	                    	out.println(" "+o.getSpecificState());
+	                }
                 }
             } else if (p.getCommand().getType() == CommandType.LOOK_AT && p.getObject() == null) {
-            	out.println(getCurrentRoom().getDescription());
-            	for (AdvObject obj : getCurrentRoom().interactiveObjects()) {
-            		//////////23456789opè
-            		out.println("Vedo "+ obj.getName());
-            	}
+            	out.println(getCurrentRoom().getDescription()+"\n");
+            	for (AdvObject obj : getCurrentRoom().interactiveObjects()) 
+            		out.println("Vedo "+obj.getArticle()+" "+obj.getName());
             } else if (p.getCommand().getType() == CommandType.LOOK_AT && p.getObject() != null) {
             	if (objectInInventory(p.getObject()) || getCurrentRoom().objectInRoom(p.getObject())) {
             		out.println(p.getObject().getDescription());
             	} else if(getCurrentRoom().objectContainer(p.getObject()) != null) {
             		if(getCurrentRoom().objectContainer(p.getObject()).isOpen()) {
             			out.println(p.getObject().getDescription());	
-            		}
-            	} else 
-            		out.println("Non vedo questo oggetto");             		
+            		}else out.println("Non vedo questo oggetto");
+            	} else out.println("Non vedo questo oggetto");    		
             } else if (p.getCommand().getType() == CommandType.PICK_UP) {
                 if (p.getObject() != null && getCurrentRoom().objectInRoom(p.getObject())) {
                     if (p.getObject().isPickupable()) {
@@ -274,10 +276,24 @@ public class TextualApocalypse extends GameDescription {
                 out.println("Da quella parte non si puo' andare c'e' un muro!");
             } else if (move) {
             	if (getCurrentRoom().getVisited() >1) {
-            		out.print("Sei in ");
-                    out.println(getCurrentRoom().getName());
+            		if(getCurrentRoom().interactiveObjects().isEmpty()) {
+                        out.println("Sei in " + getCurrentRoom().getName());
+            		} else {
+                		out.print("Sei in ");
+                        out.println(getCurrentRoom().getName()+"\n");
+                    	for (AdvObject obj : getCurrentRoom().interactiveObjects()) 
+                    		out.println("Vedo "+obj.getArticle()+" "+obj.getName());
+            		}
+
+
             	}else {
-                out.println(getCurrentRoom().getDescription());
+            		if( getCurrentRoom().interactiveObjects().isEmpty()) {
+                		out.println(getCurrentRoom().getDescription());
+            		} else {
+                		out.println(getCurrentRoom().getDescription()+"\n");
+                		for (AdvObject obj : getCurrentRoom().interactiveObjects()) 
+                			out.println("Vedo "+obj.getArticle()+" "+obj.getName());
+            		}
             	}
             }
         }
