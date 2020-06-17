@@ -173,7 +173,7 @@ public class TextualApocalypse extends GameDescription {
 	                    	out.println(" "+o.getSpecificState());
 	                }
                 }
-            } else if (p.getCommand().getType() == CommandType.LOOK_AT && p.getObject() == null) {
+            } else if (p.getCommand().getType() == CommandType.LOOK_AT && p.getObject().getId() == -2) {
             	//out.println(getCurrentRoom().getDescription()+"\n");
             	formattedString(getCurrentRoom().getDescription());
         		System.out.println();
@@ -184,7 +184,9 @@ public class TextualApocalypse extends GameDescription {
         			else
         				out.println("Vedo "+obj.getArticle()+" "+obj.getName());
         		}
-            } else if (p.getCommand().getType() == CommandType.LOOK_AT && p.getObject() != null) {
+            } else if(p.getCommand().getType() == CommandType.LOOK_AT && p.getObject().getId() == -1) {         	
+            	out.println("Non vedo questo oggetto");
+            } else if (p.getCommand().getType() == CommandType.LOOK_AT && p.getObject().getId() > 0) {
             	if (objectInInventory(p.getObject()) || getCurrentRoom().objectInRoom(p.getObject())) {
             		//GUARDA OGGETTI IN STANZA O IN INVENTARIO
             		formattedString(p.getObject().getDescription());
@@ -193,8 +195,8 @@ public class TextualApocalypse extends GameDescription {
             			formattedString(p.getObject().getDescription());
             		}else out.println("Non vedo questo oggetto");
             	} else out.println("Non vedo questo oggetto");    		
-            } else if (p.getCommand().getType() == CommandType.PICK_UP) {
-                if (p.getObject() != null &&(getCurrentRoom().objectInRoom(p.getObject())||getCurrentRoom().objectContainer(p.getObject()).isOpen())){ 
+            } else if (p.getCommand().getType() == CommandType.PICK_UP && p.getObject().getId() >0) {
+                if (getCurrentRoom().objectInRoom(p.getObject())||getCurrentRoom().objectContainer(p.getObject()).isOpen()){ 
                     if (p.getObject().isPickupable()) {
                 		if(p.getObject().getId()==10) {
                 			slowPrint("Rimuovi l'asse e un non morto ti affera dalla gola scaravendatoti fuori dalla finestra.\n" + 
@@ -212,7 +214,7 @@ public class TextualApocalypse extends GameDescription {
                             out.println("Hai raccolto "+p.getObject().getArticle()+" " + p.getObject().getName());
                 		}
                     }
-                } else if (p.getObject() != null && getCurrentRoom().objectContainer(p.getObject()) != null) {
+                } else if (getCurrentRoom().objectContainer(p.getObject()) != null) {
                 	if(getCurrentRoom().objectContainer(p.getObject()).isOpen()) {
                 		if (p.getObject().isPickupable()) {
                             getInventory().add(p.getObject());
@@ -223,11 +225,15 @@ public class TextualApocalypse extends GameDescription {
                 } else {
                     out.println("Non c'e' niente da raccogliere qui.");
                 }
+            } else if (p.getCommand().getType() == CommandType.PICK_UP && p.getObject().getId() == -2) {
+            	out.println("Non mi hai detto cosa però, sii più preciso");
+            } else if (p.getCommand().getType() == CommandType.PICK_UP && p.getObject().getId() == -1) {
+            	out.println("Non vedo questo oggetto");
             } else if (p.getCommand().getType() == CommandType.OPEN) {     
-                if (p.getObject() == null && p.getInvObject() == null) {
+                if ((p.getObject().getId() == -1||p.getObject().getId() == -2)) {//non controllo l'inventary object ma se non trova l'object non dovrebbe trovare neanche l'inventary
                     out.println("Non c'e' niente da aprire qui.");
                 } else {
-                    if (p.getObject() != null) {
+                    if (p.getObject().getId() >0) {
                         if (p.getObject().isOpenable() && p.getObject().isOpen() == false) {
                             if (p.getObject() instanceof AdvObjectContainer) {
                                 p.getObject().setOpen(true);
@@ -290,7 +296,7 @@ public class TextualApocalypse extends GameDescription {
                 }
             } else if (p.getCommand().getType() == CommandType.PUSH) {
                 //ricerca oggetti pushabili
-                if (p.getObject() != null && p.getObject().isPushable() && getCurrentRoom().objectInRoom(p.getObject())) {
+                if (p.getObject().getId() >0 && p.getObject().isPushable() && getCurrentRoom().objectInRoom(p.getObject())) {
                     out.println("Hai premuto: " + p.getObject().getName());
                     //AZIONE SU OGGETTI TRAMITE ID
                     /*

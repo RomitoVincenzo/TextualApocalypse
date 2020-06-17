@@ -56,14 +56,14 @@ public class Parser {
                     if (io > -1 && ioinv > -1) {
                         return new ParserOutput(commands.get(ic), objects.get(io), inventory.get(ioinv));
                     } else if (io > -1) {
-                        return new ParserOutput(commands.get(ic), objects.get(io), null);
+                        return new ParserOutput(commands.get(ic), objects.get(io), new AdvObject(-1));
                     } else if (ioinv > -1) {
-                        return new ParserOutput(commands.get(ic), null, inventory.get(ioinv));
+                        return new ParserOutput(commands.get(ic), new AdvObject(-1), inventory.get(ioinv));
                     } else {
-                        return new ParserOutput(commands.get(ic), null, null);
+                        return new ParserOutput(commands.get(ic), new AdvObject(-1), new AdvObject(-1));
                     }
                 } else {
-                    return new ParserOutput(commands.get(ic), null);
+                    return new ParserOutput(commands.get(ic), new AdvObject(-2));
                 }
             } else {
                 return new ParserOutput(null, null);
