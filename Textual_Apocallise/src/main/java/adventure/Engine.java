@@ -72,7 +72,7 @@ public class Engine {
 	                List<AdvObject> list = new ArrayList();
 	                list.addAll(game.getCurrentRoom().getObjects());
 	                list.addAll(game.getCurrentRoom().getContainedObjects());
-	                ParserOutput p = parser.parse(command, game.getCommands(),list, game.getInventory());
+	                ParserOutput p = parser.parse(command, game.getCommands(),list, game.getInventory().getList());
 	                if (p.getCommand() != null && p.getCommand().getType() == CommandType.END) {
 	                    System.out.println("Addio!");
 	                    break;

@@ -209,12 +209,12 @@ public class Room {
     public List<AdvObject> interactiveObjects() {
     	List<AdvObject> list = new ArrayList();
     	for(AdvObject obj : getObjects()) {
-    		if(obj.isOpenable()==true || obj.isPickupable()==true || obj.isPushable()==true || obj.getSpecificState().equals(null)) {
+    		if(obj.isOpenable()==true || obj.isPickupable()==true || obj.isPushable()==true || obj.getSpecificState()!=null) {
     			list.add(obj);
     		}
     	     if(obj instanceof AdvObjectContainer && obj.isOpen()==true) {
     			for(AdvObject obj2 : ((AdvObjectContainer) obj).getList()) {
-    	    		if(obj2.isOpenable()==true || obj2.isPickupable()==true || obj2.isPushable()==true || obj2.getSpecificState().equals(null)) {
+    	    		if(obj2.isOpenable()==true || obj2.isPickupable()==true || obj2.isPushable()==true || obj2.getSpecificState()!=null) {
     	    			list.add(obj2);
     	    		}
     			}

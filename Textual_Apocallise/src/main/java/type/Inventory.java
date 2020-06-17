@@ -27,4 +27,23 @@ public class Inventory {
     public void remove(AdvObject o) {
         list.remove(o);
     }
+    public boolean objectInInventory(AdvObject o)
+    {
+    	boolean found=false;
+    	for(AdvObject obj : getList()) {
+    		if(obj.getId() == obj.getId())
+    			found=true;
+    		}
+    	return found;
+    }
+    
+    public AdvObject objectById(int Id)
+    {
+    	AdvObject ao=null;
+    	for(AdvObject obj : getList()) {
+    		if(obj.getId() == Id)
+    			ao=obj;
+    		}
+    	return ao;
+    }
 }

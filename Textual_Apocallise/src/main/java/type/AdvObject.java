@@ -135,12 +135,12 @@ public class AdvObject {
         this.alias = new HashSet(Arrays.asList(alias));
     }
     
-    public void setSpecificState(String name) {
-        this.name = name;
+    public void setSpecificState(String SpecificState) {
+        this.specificState = SpecificState;
     }
 
     public String getSpecificState() {
-        return description;
+        return specificState;
     }
 
     public int getId() {

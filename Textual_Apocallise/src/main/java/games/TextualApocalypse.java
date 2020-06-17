@@ -162,12 +162,12 @@ public class TextualApocalypse extends GameDescription {
                     noroom = true;
                 }    
             } else if (p.getCommand().getType() == CommandType.INVENTORY) {
-            	if(getInventory().isEmpty())
+            	if(getInventory().getList().isEmpty())
             		out.println("Il inventario e' vuoto ");
             	else
             	{
 	                out.println("Nel tuo inventario ci sono: ");
-	                for (AdvObject o : getInventory()) {
+	                for (AdvObject o : getInventory().getList()) {
 	                    out.println(o.getName());
 	                    if(o.getSpecificState() != null)
 	                    	out.println(" "+o.getSpecificState());
@@ -176,9 +176,14 @@ public class TextualApocalypse extends GameDescription {
             } else if (p.getCommand().getType() == CommandType.LOOK_AT && p.getObject() == null) {
             	//out.println(getCurrentRoom().getDescription()+"\n");
             	formattedString(getCurrentRoom().getDescription());
-            	for (AdvObject obj : getCurrentRoom().interactiveObjects()) {
-            		out.println("Vedo "+obj.getArticle()+" "+obj.getName());
-            		}
+        		System.out.println();
+            	for (AdvObject obj : getCurrentRoom().interactiveObjects()) 
+        		{
+        			if(obj.getSpecificState()!=null) 
+        				out.println("Vedo "+obj.getArticle()+" "+obj.getName()+" "+obj.getSpecificState());
+        			else
+        				out.println("Vedo "+obj.getArticle()+" "+obj.getName());
+        		}
             } else if (p.getCommand().getType() == CommandType.LOOK_AT && p.getObject() != null) {
             	if (objectInInventory(p.getObject()) || getCurrentRoom().objectInRoom(p.getObject())) {
             		//GUARDA OGGETTI IN STANZA O IN INVENTARIO
@@ -189,25 +194,30 @@ public class TextualApocalypse extends GameDescription {
             		}else out.println("Non vedo questo oggetto");
             	} else out.println("Non vedo questo oggetto");    		
             } else if (p.getCommand().getType() == CommandType.PICK_UP) {
-                if (p.getObject() != null && getCurrentRoom().objectInRoom(p.getObject())) {
+                if (p.getObject() != null &&(getCurrentRoom().objectInRoom(p.getObject())||getCurrentRoom().objectContainer(p.getObject()).isOpen())){ 
                     if (p.getObject().isPickupable()) {
                 		if(p.getObject().getId()==10) {
                 			slowPrint("Rimuovi l'asse e un non morto ti affera dalla gola scaravendatoti fuori dalla finestra.\n" + 
                 							  "In un men che non si dica vieni circondato da un'orda di zombi che ti riduce a brandelli.\n");
                 			end(out);
-                		} else if((p.getObject().getId()==10)) {
-                			//////
                 		}
-                        getInventory().add(p.getObject());
-                        getCurrentRoom().getObjects().remove(p.getObject());
-                        out.println("Hai raccolto: " + p.getObject().getName());
+                		if(getCurrentRoom().objectContainer(p.getObject())!=null) {
+                			getInventory().add(p.getObject());
+                			out.println("Hai raccolto "+p.getObject().getArticle()+" " + p.getObject().getName()+" da"+" "+getCurrentRoom().objectContainer(p.getObject()).getName());
+                			getCurrentRoom().objectContainer(p.getObject()).remove(p.getObject());  		
+                		}
+                		else {
+                            getInventory().add(p.getObject());
+                            getCurrentRoom().getObjects().remove(p.getObject());
+                            out.println("Hai raccolto "+p.getObject().getArticle()+" " + p.getObject().getName());
+                		}
                     }
                 } else if (p.getObject() != null && getCurrentRoom().objectContainer(p.getObject()) != null) {
                 	if(getCurrentRoom().objectContainer(p.getObject()).isOpen()) {
                 		if (p.getObject().isPickupable()) {
                             getInventory().add(p.getObject());
                             getCurrentRoom().getObjects().remove(p.getObject());
-                            out.println("Hai raccolto: " + p.getObject().getName());
+                            out.println("Hai raccolto "+p.getObject().getArticle()+" " + p.getObject().getName());
                 		}
                 	}
                 } else {
@@ -221,7 +231,7 @@ public class TextualApocalypse extends GameDescription {
                         if (p.getObject().isOpenable() && p.getObject().isOpen() == false) {
                             if (p.getObject() instanceof AdvObjectContainer) {
                                 p.getObject().setOpen(true);
-                                out.println("Hai aperto: " + p.getObject().getName());
+                                out.println("Hai aperto: "+p.getObject().getArticle()+" "  + p.getObject().getName());
                                 AdvObjectContainer c = (AdvObjectContainer) p.getObject();
                                 if (!c.getList().isEmpty()) {
                                     out.print(c.getName() + " contiene:");
@@ -233,8 +243,21 @@ public class TextualApocalypse extends GameDescription {
                                     out.println();
                                 }
                             } else {
-                                out.println("Hai aperto: " + p.getObject().getName());
-                                p.getObject().setOpen(true);
+                            	//apri porte con chiavi
+                            	if(p.getObject().getId()==5 && getInventory().objectInInventory(getInventory().objectById(18)))
+                            	{
+                            		out.println("Hai aperto: "+p.getObject().getArticle()+" "  + p.getObject().getName());
+                            	    p.getObject().setOpen(true);
+                            	    p.getObject().setSpecificState("aperta");
+                            	}
+                            	else if(p.getObject().getId()==5 && !getInventory().objectInInventory(getInventory().objectById(18))){
+                            		out.println("Non disponi delle chiavi per aprire questa porta");
+                            	}
+                            	else {
+                            		//porte senza chiavi
+                                    p.getObject().setOpen(true);
+                                    p.getObject().setSpecificState("aperta");
+                            	}
                             }
                         } else {
                             out.println("Non puoi aprire questo oggetto.");
@@ -292,8 +315,13 @@ public class TextualApocalypse extends GameDescription {
             		} else {
                 		out.print("Sei in ");
                         out.println(getCurrentRoom().getName()+"\n");
-                    	for (AdvObject obj : getCurrentRoom().interactiveObjects()) 
-                    		out.println("Vedo "+obj.getArticle()+" "+obj.getName());
+                        for (AdvObject obj : getCurrentRoom().interactiveObjects()) 
+                		{
+                			if(obj.getSpecificState()!=null) 
+                				out.println("Vedo "+obj.getArticle()+" "+obj.getName()+" "+obj.getSpecificState());
+                			else
+                				out.println("Vedo "+obj.getArticle()+" "+obj.getName());
+                		}
             		}
 
 
@@ -306,7 +334,12 @@ public class TextualApocalypse extends GameDescription {
                 		formattedString(getCurrentRoom().getDescription());
                 		System.out.println();
                 		for (AdvObject obj : getCurrentRoom().interactiveObjects()) 
-                			out.println("Vedo "+obj.getArticle()+" "+obj.getName());
+                		{
+                			if(obj.getSpecificState()!=null) 
+                				out.println("Vedo "+obj.getArticle()+" "+obj.getName()+" "+obj.getSpecificState());
+                			else
+                				out.println("Vedo "+obj.getArticle()+" "+obj.getName());
+                		}
             		}
             	}
             }
@@ -314,7 +347,16 @@ public class TextualApocalypse extends GameDescription {
     }
 
     private void end(PrintStream out) {
-        out.println("\n\n\nMORTO\n\n\n\n");
+        out.println("\r\n\n" +
+                "             @\r\n" +
+                "             @\r\n" +
+                "           @@@@@\r\n" +
+                "             @\r\n" +
+                "             @\r\n" +
+                "         ____#_____\r\n" +
+                "        /         /\r\n" +
+                "       /   ~~~   /\r\n" +
+                "      /   ~~~   /\n\n");
         System.exit(0);
     }
     
@@ -454,19 +496,4 @@ public class TextualApocalypse extends GameDescription {
     	System.out.println();
     }
 }
-
-
-
-
-/*
-     STANZE ID
-     Soggiorno = 1
-     Bagno = 2 
-     Corridoio = 3
-     Cucina = 4
-     Armeria = 5
-     Ingresso = 6
-     Garage = 7
-     
-    */ 	
 

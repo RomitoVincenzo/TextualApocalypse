@@ -9,6 +9,7 @@ import parser.ParserOutput;
 import type.AdvObject;
 import type.Command;
 import type.Room;
+import type.Inventory;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ public abstract class GameDescription {
 
     private final List<Command> commands = new ArrayList();
 
-    private final List<AdvObject> inventory = new ArrayList();
+    private final Inventory inventory = new Inventory();
 
     private Room currentRoom;
     
@@ -44,7 +45,7 @@ public abstract class GameDescription {
         this.currentRoom = currentRoom;
     }
 
-    public List<AdvObject> getInventory() {
+    public Inventory getInventory() {
         return inventory;
     }
 
@@ -64,7 +65,7 @@ public abstract class GameDescription {
     
     public boolean objectInInventory (AdvObject object) {
     	boolean flag = false;
-    	for(AdvObject obj : getInventory()) {
+    	for(AdvObject obj : getInventory().getList()) {
     		if(obj.getId() == object.getId())
     			flag=true;
     		}
