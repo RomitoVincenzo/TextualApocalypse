@@ -48,16 +48,73 @@ public class Engine {
         parser = new Parser();
     }
 
-    public void run() {
+    public void run() throws InterruptedException, IOException {
+    	Scanner scanner = new Scanner(System.in);
     	//game.firstScreen();
-    	
+    	String command = "0";
     	//game.menu();
+    	do {
+    		System.out.print("\n"+"Fai la tua scelta (1..4) ? ");
+    		command = scanner.nextLine();
+    	}while (!command.equals("1") && !command.equals("2")  && !command.equals("3")  && !command.equals("4") );
+    	
+    	switch(Integer.parseInt(command)) {
+	    	case 1:
+	    		//nuova partita
+	    		//game.prologue();
+	            game.formattedString(game.getCurrentRoom().getDescription()+"\n");
+	        	for (AdvObject obj : game.getCurrentRoom().interactiveObjects()) 
+	        		System.out.println("Vedo "+obj.getArticle()+" "+obj.getName());
+	            System.out.print("\n  Cosa devo fare ? ");
+	            while (scanner.hasNextLine()) {
+	            	System.out.println();
+	                command = scanner.nextLine();
+	                List<AdvObject> list = new ArrayList();
+	                list.addAll(game.getCurrentRoom().getObjects());
+	                list.addAll(game.getCurrentRoom().getContainedObjects());
+	                ParserOutput p = parser.parse(command, game.getCommands(),list, game.getInventory());
+	                if (p.getCommand() != null && p.getCommand().getType() == CommandType.END) {
+	                    System.out.println("Addio!");
+	                    break;
+	                } else {
+	                    game.nextMove(p, System.out);
+	                }
+	                System.out.print("\n  Cosa devo fare ? ");
+	                
+	            }
+	    		break;
+	    	case 2:
+	    		//carica partita
+	    		break;
+	    	case 3:
+	    		//istruzioni
+	    		break;
+	    	case 4 :
+	    		//exit
+	    		break;
+    	}
+   
+    	
+    	
+    	
+    	
+    	
     	//logica menu
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	/*//inzio partita
         System.out.println(game.getCurrentRoom().getDescription()+"\n");
     	for (AdvObject obj : game.getCurrentRoom().interactiveObjects()) 
     		System.out.println("Vedo "+obj.getArticle()+" "+obj.getName());
         System.out.print("\n  Cosa devo fare ? ");
-        Scanner scanner = new Scanner(System.in);
         while (scanner.hasNextLine()) {
         	System.out.println();
             String command = scanner.nextLine();
@@ -73,7 +130,7 @@ public class Engine {
             }
             System.out.print("\n  Cosa devo fare ? ");
             
-        }
+        }*/
     }
 
     /**
@@ -84,9 +141,10 @@ public class Engine {
         Engine engine = new Engine(new TextualApocalypse());
         engine.run();
     }
+    
+    
 
 }
-
 
 
 

@@ -84,5 +84,7 @@ public abstract class GameDescription {
     
     public abstract void instructions();
     
+    public abstract void formattedString(String input);
+    
 
 }

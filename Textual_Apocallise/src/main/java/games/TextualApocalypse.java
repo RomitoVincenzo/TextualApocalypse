@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.Scanner;
 import java.util.Set;
 
 /**
@@ -173,20 +174,30 @@ public class TextualApocalypse extends GameDescription {
 	                }
                 }
             } else if (p.getCommand().getType() == CommandType.LOOK_AT && p.getObject() == null) {
-            	out.println(getCurrentRoom().getDescription()+"\n");
-            	for (AdvObject obj : getCurrentRoom().interactiveObjects()) 
+            	//out.println(getCurrentRoom().getDescription()+"\n");
+            	formattedString(getCurrentRoom().getDescription());
+            	for (AdvObject obj : getCurrentRoom().interactiveObjects()) {
             		out.println("Vedo "+obj.getArticle()+" "+obj.getName());
+            		}
             } else if (p.getCommand().getType() == CommandType.LOOK_AT && p.getObject() != null) {
             	if (objectInInventory(p.getObject()) || getCurrentRoom().objectInRoom(p.getObject())) {
-            		out.println(p.getObject().getDescription());
+            		//GUARDA OGGETTI IN STANZA O IN INVENTARIO
+            		formattedString(p.getObject().getDescription());
             	} else if(getCurrentRoom().objectContainer(p.getObject()) != null) {
             		if(getCurrentRoom().objectContainer(p.getObject()).isOpen()) {
-            			out.println(p.getObject().getDescription());	
+            			formattedString(p.getObject().getDescription());
             		}else out.println("Non vedo questo oggetto");
             	} else out.println("Non vedo questo oggetto");    		
             } else if (p.getCommand().getType() == CommandType.PICK_UP) {
                 if (p.getObject() != null && getCurrentRoom().objectInRoom(p.getObject())) {
                     if (p.getObject().isPickupable()) {
+                		if(p.getObject().getId()==10) {
+                			slowPrint("Rimuovi l'asse e un non morto ti affera dalla gola scaravendatoti fuori dalla finestra.\n" + 
+                							  "In un men che non si dica vieni circondato da un'orda di zombi che ti riduce a brandelli.\n");
+                			end(out);
+                		} else if((p.getObject().getId()==10)) {
+                			//////
+                		}
                         getInventory().add(p.getObject());
                         getCurrentRoom().getObjects().remove(p.getObject());
                         out.println("Hai raccolto: " + p.getObject().getName());
@@ -288,9 +299,12 @@ public class TextualApocalypse extends GameDescription {
 
             	}else {
             		if( getCurrentRoom().interactiveObjects().isEmpty()) {
-                		out.println(getCurrentRoom().getDescription());
+                		//out.println(getCurrentRoom().getDescription());
+            			formattedString(getCurrentRoom().getDescription());
             		} else {
-                		out.println(getCurrentRoom().getDescription()+"\n");
+                		//out.println(getCurrentRoom().getDescription()+"\n");
+                		formattedString(getCurrentRoom().getDescription());
+                		System.out.println();
                 		for (AdvObject obj : getCurrentRoom().interactiveObjects()) 
                 			out.println("Vedo "+obj.getArticle()+" "+obj.getName());
             		}
@@ -300,37 +314,44 @@ public class TextualApocalypse extends GameDescription {
     }
 
     private void end(PrintStream out) {
-        out.println("Premi il pulsante del giocattolo e in seguito ad una forte esplosione la tua casa prende fuoco...tu e tuoi famigliari cercate invano di salvarvi e venite avvolti dalle fiamme...Ã¨ stata una morte CALOROSA...addio!");
+        out.println("\n\n\nMORTO\n\n\n\n");
         System.exit(0);
     }
     
     public void firstScreen() {
     	System.out.println();
     	System.out.println();
-    	System.out.print("      ╔═══╗           \r\n" + 
-    			"      ║► ◄║\r\n" + 
-    			"   ╔═╗╚═══╝╔═╗\r\n" + 
-    			"╔══════════════════════════════════════════════════════════════════════════════════════\r\n" + 
-    			"║    \r\n" + 
-    			"║    ▄▄▄█████▓█████▒██   ██▄▄▄█████▓█    ██ ▄▄▄      ██▓                                  ╔═══╗\r\n" + 
-    			"║    ▓  ██▒ ▓▓█   ▀▒▒ █ █ ▒▓  ██▒ ▓▒██  ▓██▒████▄   ▓██▒                                  ║× ×║\r\n" + 
-    			"║    ▒ ▓██░ ▒▒███  ░░  █   ▒ ▓██░ ▒▓██  ▒██▒██  ▀█▄ ▒██░                               ╔═╗╚═══╝╔═╗  \r\n" + 
-    			"║    ░ ▓██▓ ░▒▓█  ▄ ░ █ █ ▒░ ▓██▓ ░▓▓█  ░██░██▄▄▄▄██▒██░                               ╚═╝  ▒  ╚═╝ \r\n" + 
-    			"║      ▒██▒ ░░▒████▒██▒ ▒██▒ ▒██▒ ░▒▒█████▓ ▓█   ▓██░██████▒                              ╚   ╝ \r\n" + 
-    			"║      ▒ ░░  ░░ ▒░ ▒▒ ░ ░▓ ░ ▒ ░░  ░▒▓▒ ▒ ▒ ▒▒   ▓▒█░ ▒░▓  ░                              ║ _ ║\r\n" + 
-    			"║        ░    ░ ░  ░░   ░▒ ░   ░   ░░▒░ ░ ░  ▒   ▒▒ ░ ░ ▒  ░                              ╚╝ ╚╝ \r\n" + 
-    			"║      ░        ░   ░    ░   ░      ░░░ ░ ░  ░   ▒    ░ ░                                       \r\n" + 
-    			"║              ▄▄▄ ░░   ██▓███  ▒█████░ ▄████▄  ▄▄▄ ░   ░██▓    ██▓██▓███   ██████▓█████          \r\n" + 
-    			"║             ▒████▄   ▓██░  ██▒██▒  ██▒██▀ ▀█ ▒████▄   ▓██▒   ▓██▓██░  ██▒██    ▒▓█   ▀      ║\r\n" + 
-    			"║             ▒██  ▀█▄ ▓██░ ██▓▒██░  ██▒▓█    ▄▒██  ▀█▄ ▒██░   ▒██▓██░ ██▓░ ▓██▄  ▒███        ║\r\n" + 
-    			"║             ░██▄▄▄▄██▒██▄█▓▒ ▒██   ██▒▓▓▄ ▄██░██▄▄▄▄██▒██░   ░██▒██▄█▓▒ ▒ ▒   ██▒▓█  ▄      ║\r\n" + 
-    			"║              ▓█   ▓██▒██▒ ░  ░ ████▓▒▒ ▓███▀ ░▓█   ▓██░██████░██▒██▒ ░  ▒██████▒░▒████▒     ║\r\n" + 
-    			"║              ▒▒   ▓▒█▒▓▒░ ░  ░ ▒░▒░▒░░ ░▒ ▒  ░▒▒   ▓▒█░ ▒░▓  ░▓ ▒▓▒░ ░  ▒ ▒▓▒ ▒ ░░ ▒░ ░     ║\r\n" + 
-    			"║               ▒   ▒▒ ░▒ ░      ░ ▒ ▒░  ░  ▒    ▒   ▒▒ ░ ░ ▒  ░▒ ░▒ ░    ░ ░▒  ░ ░░ ░  ░     ║\r\n" + 
-    			"║               ░   ▒  ░░      ░ ░ ░ ▒ ░         ░   ▒    ░ ░   ▒ ░░      ░  ░  ░    ░        ║\r\n" + 
-    			"                   ░  ░           ░ ░ ░ ░           ░  ░   ░  ░░               ░    ░         ║\r\n" + 
-    			"                                                                                              ║\r\n" + 
-    			"                                ══════════════════════════════════════════════════════════════╝                                                                                                                                 ");
+    	System.out.print(""+
+    	        "      ╔═══╗\r\n" + 
+    	        "      ║► ◄║\r\n" + 
+    	        "   ╔═╗╚═══╝╔═╗\r\n" + 
+    	        "╔══════════════════════════════════════════════════════════════════════════════════════                                                                                                           \r\n" + 
+    	        "║    ▄▄▄█████ █████▒██   ██ ▄▄█████ █    ██ ▄▄▄      ██                 ╔═══╗                    \r\n" + 
+    	        "║    ▓  ██▒   █   ▀▒▒ █ █ ▒   ██▒  ▒██   ██▒████▄    ██▒                ║× ×║                    \r\n" + 
+    	        "║    ▒  ██░ ▒▒███  ░░  █   ▒  ██░ ▒ ██  ▒██▒██  ▀█▄ ▒██░             ╔═╗╚═══╝╔═╗                 \r\n" + 
+    	        "║    ░  ██  ░▒ █  ▄ ░ █ █ ▒░  ██  ░ ██  ░██░██▄▄▄▄██▒██░             ╚═╝  ▒  ╚═╝                 \r\n" + 
+    	        "║      ▒██▒ ░░▒████▒██▒ ▒██▒ ▒██▒ ░▒▒█████▓ ▓█   ▓██░██████▒            ╚   ╝                    \r\n" + 
+    	        "║      ▒ ░░  ░░ ▒░ ▒▒ ░ ░  ░ ▒ ░░  ░▒▓▒ ▒ ▒ ▒▒   ▓▒█░ ▒░▓  ░            ║ _ ║                    \r\n" + 
+    	        "║        ░    ░ ░  ░░   ░▒ ░   ░   ░░▒░ ░ ░  ▒   ▒▒ ░ ░ ▒  ░            ╚╝ ╚╝                    \r\n" + 
+    	        "║      ░        ░   ░    ░   ░      ░░░ ░ ░  ░   ▒    ░ ░                                        \r\n" + 
+    	        "║               ░  ░░    ░            ░          ░  ░   ░  ░                                     ║\r\n" + 
+    	        "║              ▄▄▄      ██▓███  ▒█████  ▄████▄  ▄▄▄      ██     ██   ██ ██▓███   ██████ █████    ║\r\n" + 
+    	        "║             ▒████▄    ██░  ██▒██▒  ██▒██▀ ▀█ ▒████▄    ██▒   ▒██  ██ ██░  ██▒██    ▒ █   ▀     ║\r\n" + 
+    	        "║             ▒██  ▀█▄  ██░ ██▓▒██░  ██▒▓█    ▄▒██  ▀█▄ ▒██░    ▒██ ██ ██░ ██▒░ ▒██▄  ▒███       ║\r\n" + 
+    	        "║             ░██▄▄▄▄██ ██▄█▓▒ ▒██   ██▒▓▓▄ ▄██░██▄▄▄▄██▒██░    ░ ▐██  ██▄█▒▒ ▒ ▒   ██▒ █  ▄     ║\r\n" + 
+    	        "║              ▓█   ▓██▒██▒ ░  ░ ████▓▒▒ ▓███▀ ░▓█   ▓██░██████▒░ ██▒  ██▒ ░  ▒██████▒░▒████▒    ║\r\n" + 
+    	        "               ▒▒   ▓▒█▒ ▒░ ░  ░ ▒░▒░▒░░ ░▒ ▒  ░▒▒   ▓▒█░ ▒░▓  ░ ██▒▒▒▒▓▒░ ░  ▒ ▒▓▒ ▒ ░░ ▒░ ░    ║\r\n" + 
+    	        "                 ▒   ▒▒ ░▒ ░      ░ ▒ ▒░  ░  ▒    ▒   ▒▒ ░ ░ ▒  ▓██ ░▒░░▒ ░    ░ ░▒  ░ ░░ ░  ░   ║\r\n" + 
+    	        "                  ░   ▒  ░░      ░ ░ ░ ▒ ░         ░   ▒    ░ ░  ▒ ▒ ░░ ░░      ░  ░  ░    ░     ║\r\n" + 
+    	        "                   ░  ░           ░ ░ ░ ░           ░  ░   ░  ░ ░                  ░    ░  ░     ║\r\n" + 
+    	        "                                      ░                       ░ ░                                ║\r\n" + 
+    	        "                                                                                                 ║\r\n" + 
+    	        "        ═════════════════════════════════════════════════════════════════════════════════════════╝\n\n\n");
+    	try {
+        	Thread.sleep(2000);
+       	} catch (InterruptedException e) {
+       		e.printStackTrace(); 
+       		}
     	}
     
     public void menu() {
@@ -339,16 +360,19 @@ public class TextualApocalypse extends GameDescription {
     	System.out.println("1) Iniziare una nuova partita"+"\n");
     	System.out.println("2) Riprendere una situazione da disco"+"\n");
     	System.out.println("3) Ripassare le istruzioni"+"\n");
-    	System.out.println("4) Smettere prima ancora di incominciare"+"\n");
-    	System.out.println("Fai la tua scelta (1..4) ? ");
+    	System.out.println("4) Smettere prima ancora di incominciare");
     }
  
     public void prologue() {
-    	String message ="PROLOGO:\r\n" + 
-    			"Nell’anno 2050 una terribile malattia infettiva si è scatenata sull’intero Globo causando negli umani atteggiamenti quali stati di collera e desiderio incessante di nutrirsi di carne umana. \r\n" + 
-    			"Con il passare degli anni più e più persone sono morte e intere città andate in rovina. Il tuo addestramento nelle forze speciali ti ha consentito di rimanere in vita per tutto questo tempo e ora sei alla ricerca di altri superstiti. \r\n" + 
-    			"Con gli operatori telefonici e Internet ormai fuori uso da anni  il tuo unico mezzo di comunicazione è la radio che hai nello scantinato e che cerchi di riparare da settimane.\r\n" + 
-    			"";
+    	String message ="\n\n[ PROLOGO ]\n\n" + 
+    			"Nell’anno 2050 una terribile malattia infettiva si è scatenata sull’intero Globo causando negli umani "+"\n"+
+    			"atteggiamenti quali stati di collera e desiderio incessante di nutrirsi di carne umana. \r\n" + 
+    			"Con il passare degli anni più e più persone sono morte e intere città andate in rovina. " +"\n"+ 
+    			"Il tuo addestramento nelle forze speciali ti ha consentito di rimanere in vita per tutto questo tempo "+"\n"
+    			+ "e ora sei alla ricerca di altri superstiti. \r\n" + 
+    			"Con gli operatori telefonici e Internet ormai fuori uso da anni  il tuo unico mezzo di comunicazione è" +"\n"
+    			+ "la radio che hai nello scantinato e che cerchi di riparare da settimane.\r\n"
+    			+"\n\n";
     	slowPrint(message);
     }
     
@@ -359,7 +383,7 @@ public class TextualApocalypse extends GameDescription {
 
             try
             {
-                Thread.sleep(80);
+                Thread.sleep(50);
             }
             catch (InterruptedException e)
             {
@@ -398,6 +422,37 @@ public class TextualApocalypse extends GameDescription {
     			"");
     }
    
+    public void formattedString(String input) {
+    	int n = input.length()/100;
+    	if(n>=1) {
+    		int y=0;
+    		for (int i = 1; i<=n ;i++) {
+        		while(y<i*100) {
+        			System.out.print(input.charAt(y));
+        			y++;
+        		}
+        		if(input.charAt(y) == ' ') {
+        			System.out.println();
+        			y++;
+        		} else {
+        			while(input.charAt(y) != ' ') {
+        				System.out.print(input.charAt(y));
+        				y++;
+        			}
+        			System.out.println();
+        			y++;
+        		}
+    		} 
+        	int r = input.length()-y;
+    		for (int i=0; i<r;i++) {
+    			System.out.print(input.charAt(y));
+    			y++;
+    		}
+    	} else {
+    		System.out.print(input);
+    	}
+    	System.out.println();
+    }
 }
 
 
