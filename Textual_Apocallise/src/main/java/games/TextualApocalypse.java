@@ -145,13 +145,35 @@ public class TextualApocalypse extends GameDescription {
                 			slowPrint("Ti avevo avvisato... ti sei fatto notare e adesso sei circondato di zombie.. esplodi qualche colpo ma è tutto vano, dovevi darmi ascolto");
                 			end(out);
                 		} else if (getCurrentRoom().objectById(29).getSpecificState().equals("elettrificato")) {
-                			slowPrint("Cerchi di attraversare il cancello elettrico nonostante fosse attivo .. 2000 V attraversano il tuo corpo \n bruciandoti vivo.");
-                			end(out);
+                			Scanner scanner = new Scanner(System.in);
+                			String command = "";
+                			slowPrint("[VOCE] : Qui sistema automatico di riconoscimento attivita' celebrale umana !\r\n" + 
+                					"         per accedere all'interno della struttura bisogna superare il seguente test :\r\n" + 
+                					"         D I E C I : cinque\r\n" + 
+                					"         D O D I C I : sei\r\n" + 
+                					"         Q U A T T R O : ");
+                			command = scanner.nextLine();
+                			if (command.equals("2") || command.equals("due")){
+                				slowPrint("[VOCE] : Benvenuto all'interno del laboratorio ! \n");
+                				slowPrint("Il grande Tesla Gate si spegne dinanzi ai tuoi occhi liberando cosi' il passaggio \n");
+                				getCurrentRoom().objectById(29).setSpecificState("spento");
+                				move = true;
+                        		setCurrentRoom(roomById(getCurrentRoom().getNorth()));
+                        		getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
+                			} else 
+                			{
+                				out.println("[VOCE] : ERRATO");
+                				slowPrint("Cerchi di attraversare il cancello elettrico nonostante il fallimento .. 2000 V attraversano il tuo corpo \nbruciandoti vivo.");
+                				end(out);
+                					
+                			}
                 		}
+                	} else 
+                	{
+                		setCurrentRoom(roomById(getCurrentRoom().getNorth()));
+                		getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
+                		move = true;
                 	}
-                    setCurrentRoom(roomById(getCurrentRoom().getNorth()));
-                    getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
-                    move = true;
                 } else {
                     noroom = true;
                 }
@@ -324,8 +346,8 @@ public class TextualApocalypse extends GameDescription {
             				+ "\n"+"alle tue spalle e ti azzanna al polpaccio facendoti morire dissanguato.");
             		end(out);
             	} else if (getCurrentRoom().getId() == 9 && p.getObject().getSpecificState().equals("con attorno degli zombie")) {
-            		getCurrentRoom().getObjects().remove(getCurrentRoom().objectById(30));
-            		getCurrentRoom().getObjects().remove(getCurrentRoom().objectById(28));
+            		getCurrentRoom().objectById(30).setSpecificState("esploso");
+            		getCurrentRoom().objectById(28).setSpecificState("morta");
             		slowPrint("BOOOMM , che botto !!!" +"\n"+
             				"In un secondo l'aria si colora di rosso e una pioggia di sangue ricopre l'intera area ."+"\n"
             				+"Hai fatto salta in aria quei non morti facendo esplodere quel barile. \n");
