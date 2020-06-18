@@ -101,16 +101,6 @@ public class Engine {
     	
     	
     	//logica menu
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
     	/*//inzio partita
         System.out.println(game.getCurrentRoom().getDescription()+"\n");
     	for (AdvObject obj : game.getCurrentRoom().interactiveObjects()) 

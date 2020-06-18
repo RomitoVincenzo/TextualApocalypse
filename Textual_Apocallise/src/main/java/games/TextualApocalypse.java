@@ -117,7 +117,13 @@ public class TextualApocalypse extends GameDescription {
 	            rs4.close();
 	            pstm4.close();
 	            //set starting room
-	            setCurrentRoom(roomById(1));
+	            //setCurrentRoom(roomById(1));
+	            /////MODIFICHE PER FAST RUN
+	            setCurrentRoom(roomById(9));
+	            weapon = true;
+	            AdvObjectContainer c = (AdvObjectContainer) roomById(5).objectById(1);
+	            getInventory().add(roomById(5).getContainedObjects().get(0));
+	            ///////////
 	            getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
     		}catch (SQLException ex){
     			System.err.println(ex.getSQLState() + ": " + ex.getMessage());
@@ -232,13 +238,14 @@ public class TextualApocalypse extends GameDescription {
             			radioComunication=true;
             		} else
             			out.println("La radio sembra non funzionare");
-            	} if(p.getObject().getId() == 24  && getCurrentRoom().getId()==7) {
+            	}else if(p.getObject().getId() == 24  && getCurrentRoom().getId()==7) {
            			if(radioComunication == true) {
            				if(getCurrentRoom().objectById(24).getSpecificState().equals("con benzina")) {
            					if(weapon == true) {
            						roomById(8).getObjects().add(getCurrentRoom().objectById(24));
            						getCurrentRoom().getObjects().remove(getCurrentRoom().objectById(24));
            						setCurrentRoom(roomById(8));
+           						getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
            						slowPrint("Con non poche difficolta' sei arrivato al laboratorio , durante il tragitto hai dovuto esplodere diversi "
            								+ "\n"+"colpi di arma da fuoco verso gli zombie per aprirti il passaggio ... alla fine eccoti qui dinanzi all'imponente struttura.\n\n");
            						move = true;
@@ -311,10 +318,19 @@ public class TextualApocalypse extends GameDescription {
             		}
             	} else 
             		out.println("EHH ??");
-            }/*else if (p.getCommand().getType() == CommandType.POUR && p.getObject().getId() != -1 ) {
-            	out.println("L'unica cosa che puoi versare sono lacrime");}*/
-            	
-            else if (p.getCommand().getType() == CommandType.PULL && p.getObject().getId() >0) {
+            } else if (p.getCommand().getType() == CommandType.SHOOT && p.getObject().getId() >0 && weapon==true) {
+            	if(getCurrentRoom().getId() == 9 && p.getObject().getSpecificState().equals("affamata")) {
+            		slowPrint("Bella mossa marine ma mentre sei occupato a tener testa all'orda uno zombie sbuca da un tombino "
+            				+ "\n"+"alle tue spalle e ti azzanna al polpaccio facendoti morire dissanguato.");
+            		end(out);
+            	} else if (getCurrentRoom().getId() == 9 && p.getObject().getSpecificState().equals("con attorno degli zombie")) {
+            		getCurrentRoom().getObjects().remove(getCurrentRoom().objectById(30));
+            		getCurrentRoom().getObjects().remove(getCurrentRoom().objectById(28));
+            		slowPrint("BOOOMM , che botto !!!" +"\n"+
+            				"In un secondo l'aria si colora di rosso e una pioggia di sangue ricopre l'intera area ."+"\n"
+            				+"Hai fatto salta in aria quei non morti facendo esplodere quel barile. \n");
+            	}
+        	} else if (p.getCommand().getType() == CommandType.PULL && p.getObject().getId() >0) {
             	if(p.getObject().getId() == 26) {
             		if(getCurrentRoom().objectById(23).getSpecificState().equals("non in moto")) {
             			getCurrentRoom().objectById(23).setSpecificState("in moto");
@@ -322,12 +338,9 @@ public class TextualApocalypse extends GameDescription {
             					  "\n"+ "ha ripreso ad illuminare la stanza. Meglio che tu finisca quello che hai lasciato in sospeso!\n");
             		} else
             			out.println("Il generatore e' gia' in moto");
-            		
             	}
             	
-            }/*else if (p.getCommand().getType() == CommandType.PULL && p.getObject().getId() < 0) {
-            	out.println("Non c'e' niente da tirare qui"); }*/         	
-            else if (p.getCommand().getType() == CommandType.PICK_UP && p.getObject().getId() >0) {
+            } else if (p.getCommand().getType() == CommandType.PICK_UP && p.getObject().getId() >0) {
                 if (getCurrentRoom().objectInRoom(p.getObject())||getCurrentRoom().objectContainer(p.getObject()).isOpen()){ 
                     if (p.getObject().isPickupable()) {
                 		if(p.getObject().getId()==10) {
@@ -369,11 +382,7 @@ public class TextualApocalypse extends GameDescription {
                 } else {
                     out.println("Non c'e' niente da raccogliere qui.");
                 }
-            }/* else if (p.getCommand().getType() == CommandType.PICK_UP && p.getObject().getId() == -2) {
-            	out.println("Non mi hai detto cosa però, sii più preciso");
-            } else if (p.getCommand().getType() == CommandType.PICK_UP && p.getObject().getId() == -1) {
-            	out.println("Non vedo questo oggetto");}*/
-            else if (p.getCommand().getType() == CommandType.OPEN) {     
+            } else if (p.getCommand().getType() == CommandType.OPEN) {     
                 if ((p.getObject().getId() == -1||p.getObject().getId() == -2)) {
                     out.println("Non c'e' niente da aprire qui.");
                 } else {
@@ -418,49 +427,15 @@ public class TextualApocalypse extends GameDescription {
                             out.println("Non puoi aprire questo oggetto.");
                         }
                     }
-                    //APRIRE OGGETTI CONETENUTI IN INVENTARIO
-                    /*if (p.getInvObject() != null) {
-                        if (p.getInvObject().isOpenable() && p.getInvObject().isOpen() == false) {
-                            if (p.getInvObject() instanceof AdvObjectContainer) {
-                                AdvObjectContainer c = (AdvObjectContainer) p.getInvObject();
-                                if (!c.getList().isEmpty()) {
-                                    out.print(c.getName() + " contiene:");
-                                    Iterator<AdvObject> it = c.getList().iterator();
-                                    while (it.hasNext()) {
-                                        AdvObject next = it.next();
-                                        getInventory().add(next);
-                                        out.print(" " + next.getName());
-                                        it.remove();
-                                    }
-                                    out.println();
-                                }
-                            } else {
-                                p.getInvObject().setOpen(true);
-                            }
-                            out.println("Hai aperto nel tuo inventario: " + p.getInvObject().getName());
-                        } else {
-                            out.println("Non puoi aprire questo oggetto.");
-                        }
-                    }*/
                 }
             } else if (p.getCommand().getType() == CommandType.PUSH) {
                 //ricerca oggetti pushabili
                 if (p.getObject().getId() >0 && p.getObject().isPushable() && getCurrentRoom().objectInRoom(p.getObject())) {
                     out.println("Hai premuto: " + p.getObject().getName());
-                    //AZIONE SU OGGETTI TRAMITE ID
-                    /*
-                    if (p.getObject().getId() == 3) {
-                        end(out);
-                    }*/
-                }//premere oggetto in inventario
-                /* else if (p.getInvObject() != null && p.getInvObject().isPushable()) {
-                    out.println("Hai premuto: " + p.getInvObject().getName());
-                    if (p.getInvObject().getId() == 3) {
-                        end(out);
-                    }*/
-                } else {
-                    out.println("EHH ?? ");
+
                 }
+             } else 
+                    out.println("EHH ?? ");
             if (noroom) {
                 out.println("Da quella parte non si puo' andare !!");
             } else if (move) {
