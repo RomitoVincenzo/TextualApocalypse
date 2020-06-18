@@ -50,9 +50,9 @@ public class Engine {
 
     public void run() throws InterruptedException, IOException {
     	Scanner scanner = new Scanner(System.in);
-    	//game.firstScreen();
+    	game.firstScreen();
     	String command = "0";
-    	//game.menu();
+    	game.menu();
     	do {
     		System.out.print("\n"+"Fai la tua scelta (1..4) ? ");
     		command = scanner.nextLine();
@@ -61,7 +61,7 @@ public class Engine {
     	switch(Integer.parseInt(command)) {
 	    	case 1:
 	    		//nuova partita
-	    		//game.prologue();
+	    		game.prologue();
 	            game.formattedString(game.getCurrentRoom().getDescription()+"\n");
 	        	for (AdvObject obj : game.getCurrentRoom().interactiveObjects()) 
 	        		System.out.println("Vedo "+obj.getArticle()+" "+obj.getName());
@@ -72,7 +72,7 @@ public class Engine {
 	                List<AdvObject> list = new ArrayList();
 	                list.addAll(game.getCurrentRoom().getObjects());
 	                list.addAll(game.getCurrentRoom().getContainedObjects());
-	                list.addAll(game.getInventory().getList());
+	                //list.addAll(game.getInventory().getList());
 	                ParserOutput p = parser.parse(command, game.getCommands(),list, game.getInventory().getList());
 	                if (p.getCommand() != null && p.getCommand().getType() == CommandType.END) {
 	                    System.out.println("Addio!");

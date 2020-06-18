@@ -42,7 +42,9 @@ import java.util.Set;
  * @author pierpaolo
  */
 public class TextualApocalypse extends GameDescription {
-
+	
+	boolean radio_comunication = false;
+	
     @Override
     public void init() throws Exception {    	
     		//prologue();
@@ -161,20 +163,80 @@ public class TextualApocalypse extends GameDescription {
                 } else {
                     noroom = true;
                 }    
-            } else if (p.getCommand().getType() == CommandType.INVENTORY) {
+            } else if (p.getCommand().getType() == CommandType.UP) {
+                if (getCurrentRoom().getUp() != 0) {
+                	setCurrentRoom(roomById(getCurrentRoom().getUp()));
+                	getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
+                    move = true;
+                } else {
+                    noroom = true;
+                }    
+            }else if (p.getCommand().getType() == CommandType.DOWN) {
+                if (getCurrentRoom().getDown() != 0) {
+                	if(getCurrentRoom().getId()==5 && getCurrentRoom().objectById(5).isOpen()==true) {
+                    	setCurrentRoom(roomById(getCurrentRoom().getDown()));
+                    	getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
+                        move = true;
+                	} else 
+                		noroom = true;
+
+                } else {
+                    noroom = true;
+                }  
+
+            } else if(p.getCommand().getType() == CommandType.USE && p.getObject().getId() == -1) { 
+            	if(p.getInvObject().getId() > 0) {
+            		if(p.getInvObject().getId() == 22) {
+            			AdvObject radio = getCurrentRoom().objectById(21);
+            			if (radio != null) {
+            				if(radio.getSpecificState().equals("senza antenna")) {
+            					radio.setSpecificState("funzionante");
+            					getInventory().remove(getCurrentRoom().objectById(21));	
+            					out.println("Complimenti sei riuscito ad aggiustare la radio con un semplice filo creando un'antenna.. geniale !! \n");
+            					slowPrint("Ops…sembra che la corrente sia andata via! Per fortuna che la serranda del garage è parzialmente alzata"+
+            								"\n"+"e la luce riesce ad entrare. E’ meglio che tu dia un’occhiata al generatore!\n");
+            					getCurrentRoom().objectById(23).setSpecificState("non in moto");
+            				}
+            			} else
+            				out.println("Non vedo come potrei usarlo qui");
+            		}
+            	} else
+            		out.println("Non vedo questo oggetto");
+            } else if (p.getCommand().getType() == CommandType.USE && p.getObject().getId() > 0) {
+            	if (p.getObject().getId() == 21) {
+            		if(p.getObject().getSpecificState().equals("funzionante") && getCurrentRoom().objectById(23).getSpecificState().equals("in moto")) {
+            			slowPrint("[Radio]: “Crrr…Crrrrrrrr…Qui BASE CHARLIE…Crrr…mi ricevete?” \n");
+            			slowPrint("[Tu]:“Vi ricevo, passo” \n");
+            			slowPrint("[Radio]: “Crrr…Allora c’è ancora qualcuno lì fuori! Abbiamo bisogno di aiuto qui, passo” \n");
+            			slowPrint("[Tu]:“Dove vi trovate, passo” \n");
+            			slowPrint("[Radio]: “Nel laboratorio per la ricerca contro il virus T, a nord della citta', passo” \n");
+            			slowPrint("[Tu]:“In quanti siet-” \n");
+            			out.println("Tutto d’un tratto rumori di ingranaggi e di apparecchi elettronici, un fumo grigiastro riempie la stanza:"+
+            					"\n"+"è la radio…è andata!");
+            			out.println("Sembra proprio che quelle persone abbiano bisogno del tuo aiuto.");
+            			radio_comunication=true;
+            		} else
+            			out.println("La radio sembra non funzionare");
+            	} else 
+            		out.println("Impossibile utilizzare l'oggetto");
+            }
+            /*else if (p.getCommand().getType() == CommandType.USE && p.getObject().getId() == -2) {
+            	out.println("Non mi hai detto cosa usare");}*/
+            
+            else if (p.getCommand().getType() == CommandType.INVENTORY) {
             	if(getInventory().getList().isEmpty())
             		out.println("Il inventario e' vuoto ");
             	else
             	{
 	                out.println("Nel tuo inventario ci sono: ");
 	                for (AdvObject o : getInventory().getList()) {
-	                    out.println(o.getName());
+	                	out.println();
+	                    out.print(o.getName());
 	                    if(o.getSpecificState() != null)
-	                    	out.println(" "+o.getSpecificState());
+	                    	out.print(" "+o.getSpecificState());
 	                }
                 }
             } else if (p.getCommand().getType() == CommandType.LOOK_AT && p.getObject().getId() == -2) {
-            	//out.println(getCurrentRoom().getDescription()+"\n");
             	formattedString(getCurrentRoom().getDescription());
         		System.out.println();
             	for (AdvObject obj : getCurrentRoom().interactiveObjects()) 
@@ -184,18 +246,55 @@ public class TextualApocalypse extends GameDescription {
         			else
         				out.println("Vedo "+obj.getArticle()+" "+obj.getName());
         		}
-            } else if(p.getCommand().getType() == CommandType.LOOK_AT && p.getObject().getId() == -1) {         	
-            	out.println("Non vedo questo oggetto");
+            } else if(p.getCommand().getType() == CommandType.LOOK_AT && p.getObject().getId() == -1) { 
+            	if(p.getInvObject().getId() > 0) 
+            		formattedString(p.getInvObject().getDescription());
+            	else
+            		out.println("Non vedo questo oggetto");
             } else if (p.getCommand().getType() == CommandType.LOOK_AT && p.getObject().getId() > 0) {
-            	if (objectInInventory(p.getObject()) || getCurrentRoom().objectInRoom(p.getObject())) {
-            		//GUARDA OGGETTI IN STANZA O IN INVENTARIO
+            	if (getCurrentRoom().objectInRoom(p.getObject())) {
             		formattedString(p.getObject().getDescription());
             	} else if(getCurrentRoom().objectContainer(p.getObject()) != null) {
             		if(getCurrentRoom().objectContainer(p.getObject()).isOpen()) {
             			formattedString(p.getObject().getDescription());
-            		}else out.println("Non vedo questo oggetto");
-            	} else out.println("Non vedo questo oggetto");    		
-            } else if (p.getCommand().getType() == CommandType.PICK_UP && p.getObject().getId() >0) {
+            		}else 
+            			out.println("Non vedo questo oggetto");
+            	} else
+            		out.println("Non vedo questo oggetto");    		
+            }else if (p.getCommand().getType() == CommandType.POUR && p.getObject().getId() == -1) {
+            	if(p.getInvObject().getId() > 0) {
+            		if(p.getInvObject().getId() == 25 ) {
+            			if(getCurrentRoom().objectById(24).getSpecificState().equals("senza benzina")) {
+            				if (p.getInvObject().getSpecificState().equals("piena")) {
+            					p.getInvObject().setSpecificState("vuota");
+            					getCurrentRoom().getObjects().add(p.getInvObject());
+            					getInventory().remove(getCurrentRoom().objectById(25));	
+            					getCurrentRoom().objectById(24).setSpecificState("con benzina");
+            					out.println("Hai fatto il pieno al tuo Pick-up");
+            				} else
+            					out.println("La tanica e' vuota");
+            			} else 
+            				out.println("Hai gia' fatto il pieno");
+            		}
+            	} else 
+            		out.println("EHH ??");
+            }/*else if (p.getCommand().getType() == CommandType.POUR && p.getObject().getId() != -1 ) {
+            	out.println("L'unica cosa che puoi versare sono lacrime");}*/
+            	
+            else if (p.getCommand().getType() == CommandType.PULL && p.getObject().getId() >0) {
+            	if(p.getObject().getId() == 26) {
+            		if(getCurrentRoom().objectById(23).getSpecificState().equals("non in moto")) {
+            			getCurrentRoom().objectById(23).setSpecificState("in moto");
+            			slowPrint("Ecco qua, il generatore ha ripreso a funzionare (non che prima andasse perfettamente) ed il neon"+
+            					  "\n"+ "ha ripreso ad illuminare la stanza. Meglio che tu finisca quello che hai lasciato in sospeso!\n");
+            		} else
+            			out.println("Il generatore e' gia' in moto");
+            		
+            	}
+            	
+            }/*else if (p.getCommand().getType() == CommandType.PULL && p.getObject().getId() < 0) {
+            	out.println("Non c'e' niente da tirare qui"); }*/         	
+            else if (p.getCommand().getType() == CommandType.PICK_UP && p.getObject().getId() >0) {
                 if (getCurrentRoom().objectInRoom(p.getObject())||getCurrentRoom().objectContainer(p.getObject()).isOpen()){ 
                     if (p.getObject().isPickupable()) {
                 		if(p.getObject().getId()==10) {
@@ -213,7 +312,8 @@ public class TextualApocalypse extends GameDescription {
                             getCurrentRoom().getObjects().remove(p.getObject());
                             out.println("Hai raccolto "+p.getObject().getArticle()+" " + p.getObject().getName());
                 		}
-                    }
+                    } else 
+                    	out.println("Ma sei matto ?!");
                 } else if (getCurrentRoom().objectContainer(p.getObject()) != null) {
                 	if(getCurrentRoom().objectContainer(p.getObject()).isOpen()) {
                 		if (p.getObject().isPickupable()) {
@@ -225,12 +325,12 @@ public class TextualApocalypse extends GameDescription {
                 } else {
                     out.println("Non c'e' niente da raccogliere qui.");
                 }
-            } else if (p.getCommand().getType() == CommandType.PICK_UP && p.getObject().getId() == -2) {
+            }/* else if (p.getCommand().getType() == CommandType.PICK_UP && p.getObject().getId() == -2) {
             	out.println("Non mi hai detto cosa però, sii più preciso");
             } else if (p.getCommand().getType() == CommandType.PICK_UP && p.getObject().getId() == -1) {
-            	out.println("Non vedo questo oggetto");
-            } else if (p.getCommand().getType() == CommandType.OPEN) {     
-                if ((p.getObject().getId() == -1||p.getObject().getId() == -2)) {//non controllo l'inventary object ma se non trova l'object non dovrebbe trovare neanche l'inventary
+            	out.println("Non vedo questo oggetto");}*/
+            else if (p.getCommand().getType() == CommandType.OPEN) {     
+                if ((p.getObject().getId() == -1||p.getObject().getId() == -2)) {
                     out.println("Non c'e' niente da aprire qui.");
                 } else {
                     if (p.getObject().getId() >0) {
@@ -260,6 +360,11 @@ public class TextualApocalypse extends GameDescription {
                             		out.println("Non disponi delle chiavi per aprire questa porta");
                             	}
                             	else {
+                            		if(p.getObject().getId()==20) {
+                            			slowPrint("Apri la porta lentamente ma un non morto ti affera dal braccio scaravendatoti fuori dalla porta.\n" + 
+                  							  "In un men che non si dica vieni circondato da un'orda di zombi che ti riduce a brandelli.\n");
+                            			end(out);
+                            		}
                             		//porte senza chiavi
                                     p.getObject().setOpen(true);
                                     p.getObject().setSpecificState("aperta");
@@ -310,10 +415,10 @@ public class TextualApocalypse extends GameDescription {
                         end(out);
                     }*/
                 } else {
-                    out.println("Non ci sono oggetti che puoi premere qui.");
+                    out.println("EHH ?? ");
                 }
             if (noroom) {
-                out.println("Da quella parte non si puo' andare c'e' un muro!");
+                out.println("Da quella parte non si puo' andare !!");
             } else if (move) {
             	if (getCurrentRoom().getVisited() >1) {
             		if(getCurrentRoom().interactiveObjects().isEmpty()) {
@@ -333,10 +438,8 @@ public class TextualApocalypse extends GameDescription {
 
             	}else {
             		if( getCurrentRoom().interactiveObjects().isEmpty()) {
-                		//out.println(getCurrentRoom().getDescription());
             			formattedString(getCurrentRoom().getDescription());
             		} else {
-                		//out.println(getCurrentRoom().getDescription()+"\n");
                 		formattedString(getCurrentRoom().getDescription());
                 		System.out.println();
                 		for (AdvObject obj : getCurrentRoom().interactiveObjects()) 
@@ -413,12 +516,12 @@ public class TextualApocalypse extends GameDescription {
  
     public void prologue() {
     	String message ="\n\n[ PROLOGO ]\n\n" + 
-    			"Nell’anno 2050 una terribile malattia infettiva si è scatenata sull’intero Globo causando negli umani "+"\n"+
+    			"Nell’anno 2050 una terribile malattia infettiva si e' scatenata sull’intero Globo causando negli umani "+"\n"+
     			"atteggiamenti quali stati di collera e desiderio incessante di nutrirsi di carne umana. \r\n" + 
     			"Con il passare degli anni più e più persone sono morte e intere città andate in rovina. " +"\n"+ 
     			"Il tuo addestramento nelle forze speciali ti ha consentito di rimanere in vita per tutto questo tempo "+"\n"
     			+ "e ora sei alla ricerca di altri superstiti. \r\n" + 
-    			"Con gli operatori telefonici e Internet ormai fuori uso da anni  il tuo unico mezzo di comunicazione è" +"\n"
+    			"Con gli operatori telefonici e Internet ormai fuori uso da anni  il tuo unico mezzo di comunicazione e'" +"\n"
     			+ "la radio che hai nello scantinato e che cerchi di riparare da settimane.\r\n"
     			+"\n\n";
     	slowPrint(message);
@@ -443,8 +546,8 @@ public class TextualApocalypse extends GameDescription {
     public void loadGame() {}
     
     public void instructions() {
-    	System.out.println("Il tuo obbiettivo principale è quello di aiutare un gruppo di ricercatori alle prese con un antidoto.\r\n" + 
-    			"Il mondo è stato colpito da una terribile piaga, per farcela dovrai affrontare i suoi effetti…e non solo.\r\n" + 
+    	System.out.println("Il tuo obbiettivo principale e' quello di aiutare un gruppo di ricercatori alle prese con un antidoto.\r\n" + 
+    			"Il mondo e' stato colpito da una terribile piaga, per farcela dovrai affrontare i suoi effetti…e non solo.\r\n" + 
     			"Non preoccuparti, ti accompagnerò all’interno di questa tua eroica avventura ma spetterà solo a te prendere le decisioni,\nio ti potrò comunicare solo le loro conseguenze. Speriamo non siano troppo gravi!\r\n" + 
     			"\r\n" + 
     			"Per muoverti, usa:\r\n" + 
@@ -458,7 +561,7 @@ public class TextualApocalypse extends GameDescription {
     			" - LASCIA qualcosa,\r\n" + 
     			" - GUARDA qualcosa, ad esempio GUARDA LA PROVETTA\r\n\n" + 
     			"Non usare frasi troppo complesse.\r\n\n" + 
-    			"Ricorda che hai a disposizione un inventario e quando prenderai un oggetto quest’ultimo finirà lì dentro. Stai attento il tuo inventario non è infinito.\r\n" + 
+    			"Ricorda che hai a disposizione un inventario e quando prenderai un oggetto quest’ultimo finirà lì dentro. Stai attento il tuo inventario non e' infinito.\r\n" + 
     			"Altri comandi importanti sono:\r\n" + 
     			" - DOVE ti dice dove ti trovi\r\n" + 
     			" - COSA elenca il contenuto del tuo inventario\r\n" + 

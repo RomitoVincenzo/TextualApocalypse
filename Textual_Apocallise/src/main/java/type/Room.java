@@ -222,4 +222,14 @@ public class Room {
     	}
     	return list;
     }
+    
+    public AdvObject objectById(int Id)
+    {
+    	AdvObject ao = null;
+    	for(AdvObject obj : getObjects()) {
+    		if(obj.getId() == Id)
+    			ao=obj;
+    		}
+    	return ao;
+    }  
 }
