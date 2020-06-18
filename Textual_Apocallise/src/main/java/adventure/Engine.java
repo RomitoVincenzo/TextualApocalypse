@@ -50,7 +50,7 @@ public class Engine {
 
     public void run() throws InterruptedException, IOException {
     	Scanner scanner = new Scanner(System.in);
-    	game.firstScreen();
+    	//game.firstScreen();
     	String command = "0";
     	game.menu();
     	do {
@@ -61,7 +61,7 @@ public class Engine {
     	switch(Integer.parseInt(command)) {
 	    	case 1:
 	    		//nuova partita
-	    		game.prologue();
+	    		//game.prologue();
 	            game.formattedString(game.getCurrentRoom().getDescription()+"\n");
 	        	for (AdvObject obj : game.getCurrentRoom().interactiveObjects()) 
 	        		System.out.println("Vedo "+obj.getArticle()+" "+obj.getName());

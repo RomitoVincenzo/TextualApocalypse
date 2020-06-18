@@ -43,7 +43,8 @@ import java.util.Set;
  */
 public class TextualApocalypse extends GameDescription {
 	
-	boolean radio_comunication = false;
+	boolean radioComunication = false;
+	boolean weapon = false;
 	
     @Override
     public void init() throws Exception {    	
@@ -133,6 +134,15 @@ public class TextualApocalypse extends GameDescription {
             boolean move = false;
             if (p.getCommand().getType() == CommandType.NORD) {
                 if (getCurrentRoom().getNorth() != 0) {
+                	if(getCurrentRoom().getId() == 9) {
+                		if(getCurrentRoom().objectById(28).getSpecificState().equals("affamata")) {
+                			slowPrint("Ti avevo avvisato... ti sei fatto notare e adesso sei circondato di zombie.. esplodi qualche colpo ma è tutto vano, dovevi darmi ascolto");
+                			end(out);
+                		} else if (getCurrentRoom().objectById(30).getSpecificState().equals("elettrificato")) {
+                			slowPrint("Cerchi di attraversare il cancello elettrico nonostante fosse attivo .. 2000 V attraversano il tuo corpo \n bruciandoti vivo.");
+                			end(out);
+                		}
+                	}
                     setCurrentRoom(roomById(getCurrentRoom().getNorth()));
                     getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
                     move = true;
@@ -199,7 +209,12 @@ public class TextualApocalypse extends GameDescription {
             				}
             			} else
             				out.println("Non vedo come potrei usarlo qui");
-            		}
+            		} else if(p.getInvObject().getId() == 18 && getCurrentRoom().getId()==5) {
+                    		out.println("Hai aperto la botola");
+                    	    getCurrentRoom().objectById(22).setOpen(true);
+                    	    p.getObject().setSpecificState("aperta");
+            		}else
+            			out.println("Non vedo come potrei usarlo qui");	
             	} else
             		out.println("Non vedo questo oggetto");
             } else if (p.getCommand().getType() == CommandType.USE && p.getObject().getId() > 0) {
@@ -214,10 +229,27 @@ public class TextualApocalypse extends GameDescription {
             			out.println("Tutto d’un tratto rumori di ingranaggi e di apparecchi elettronici, un fumo grigiastro riempie la stanza:"+
             					"\n"+"è la radio…è andata!");
             			out.println("Sembra proprio che quelle persone abbiano bisogno del tuo aiuto.");
-            			radio_comunication=true;
+            			radioComunication=true;
             		} else
             			out.println("La radio sembra non funzionare");
-            	} else 
+            	} if(p.getObject().getId() == 24) {
+           			if(radioComunication == true) {
+           				if(getCurrentRoom().objectById(24).getSpecificState().equals("con benzina")) {
+           					if(weapon == true) {
+           						roomById(8).getObjects().add(getCurrentRoom().objectById(24));
+           						getCurrentRoom().getObjects().remove(getCurrentRoom().objectById(24));
+           						setCurrentRoom(roomById(8));
+           						slowPrint("Con non poche difficolta' sei arrivato al laboratorio , durante il tragitto hai dovuto esplodere diversi "
+           								+ "\n"+"colpi di arma da fuoco verso gli zombie per aprirti il passaggio ... alla fine eccoti qui dinanzi all'imponente struttura.");
+           						move = true;
+           					}else 
+           						out.println("Non ti consiglio di uscire disarmato con tutti quei non morti nei dintorni ! ");
+            			
+           				} else 
+           					out.println("Dove vorresti andare senza benzina??");
+           			} else 
+           				out.println("Non hai dove andare");
+            	}else 
             		out.println("Impossibile utilizzare l'oggetto");
             }
             /*else if (p.getCommand().getType() == CommandType.USE && p.getObject().getId() == -2) {
@@ -235,6 +267,7 @@ public class TextualApocalypse extends GameDescription {
 	                    if(o.getSpecificState() != null)
 	                    	out.print(" "+o.getSpecificState());
 	                }
+	                out.println();
                 }
             } else if (p.getCommand().getType() == CommandType.LOOK_AT && p.getObject().getId() == -2) {
             	formattedString(getCurrentRoom().getDescription());
@@ -303,9 +336,20 @@ public class TextualApocalypse extends GameDescription {
                 			end(out);
                 		}
                 		if(getCurrentRoom().objectContainer(p.getObject())!=null) {
-                			getInventory().add(p.getObject());
-                			out.println("Hai raccolto "+p.getObject().getArticle()+" " + p.getObject().getName()+" da"+" "+getCurrentRoom().objectContainer(p.getObject()).getName());
-                			getCurrentRoom().objectContainer(p.getObject()).remove(p.getObject());  		
+                			if(p.getObject().getId()==2 || p.getObject().getId()==3 || p.getObject().getId()==4 ) {
+                				if(weapon == false) {
+                					getInventory().add(p.getObject());
+                        			out.println("Hai raccolto "+p.getObject().getArticle()+" " + p.getObject().getName()+" da"+" "+getCurrentRoom().objectContainer(p.getObject()).getName());
+                        			getCurrentRoom().objectContainer(p.getObject()).remove(p.getObject());
+                        			weapon = true;
+                				} else {
+                					out.println("Non hai spazio per un'altra arma");
+                				}
+                			} else {
+                				getInventory().add(p.getObject());
+                				out.println("Hai raccolto "+p.getObject().getArticle()+" " + p.getObject().getName()+" da"+" "+getCurrentRoom().objectContainer(p.getObject()).getName());
+                				getCurrentRoom().objectContainer(p.getObject()).remove(p.getObject());  
+                			}
                 		}
                 		else {
                             getInventory().add(p.getObject());
