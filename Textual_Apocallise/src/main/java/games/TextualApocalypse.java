@@ -138,7 +138,7 @@ public class TextualApocalypse extends GameDescription {
                 		if(getCurrentRoom().objectById(28).getSpecificState().equals("affamata")) {
                 			slowPrint("Ti avevo avvisato... ti sei fatto notare e adesso sei circondato di zombie.. esplodi qualche colpo ma è tutto vano, dovevi darmi ascolto");
                 			end(out);
-                		} else if (getCurrentRoom().objectById(30).getSpecificState().equals("elettrificato")) {
+                		} else if (getCurrentRoom().objectById(29).getSpecificState().equals("elettrificato")) {
                 			slowPrint("Cerchi di attraversare il cancello elettrico nonostante fosse attivo .. 2000 V attraversano il tuo corpo \n bruciandoti vivo.");
                 			end(out);
                 		}
@@ -209,9 +209,9 @@ public class TextualApocalypse extends GameDescription {
             				}
             			} else
             				out.println("Non vedo come potrei usarlo qui");
-            		} else if(p.getInvObject().getId() == 18 && getCurrentRoom().getId()==5) {
+            		} else if(p.getInvObject().getId() == 18 && getCurrentRoom().getId()==5 && getCurrentRoom().objectById(5).isOpen()==false) {
                     		out.println("Hai aperto la botola");
-                    	    getCurrentRoom().objectById(22).setOpen(true);
+                    	    getCurrentRoom().objectById(5).setOpen(true);
                     	    p.getObject().setSpecificState("aperta");
             		}else
             			out.println("Non vedo come potrei usarlo qui");	
@@ -232,7 +232,7 @@ public class TextualApocalypse extends GameDescription {
             			radioComunication=true;
             		} else
             			out.println("La radio sembra non funzionare");
-            	} if(p.getObject().getId() == 24) {
+            	} if(p.getObject().getId() == 24  && getCurrentRoom().getId()==7) {
            			if(radioComunication == true) {
            				if(getCurrentRoom().objectById(24).getSpecificState().equals("con benzina")) {
            					if(weapon == true) {
@@ -240,7 +240,7 @@ public class TextualApocalypse extends GameDescription {
            						getCurrentRoom().getObjects().remove(getCurrentRoom().objectById(24));
            						setCurrentRoom(roomById(8));
            						slowPrint("Con non poche difficolta' sei arrivato al laboratorio , durante il tragitto hai dovuto esplodere diversi "
-           								+ "\n"+"colpi di arma da fuoco verso gli zombie per aprirti il passaggio ... alla fine eccoti qui dinanzi all'imponente struttura.");
+           								+ "\n"+"colpi di arma da fuoco verso gli zombie per aprirti il passaggio ... alla fine eccoti qui dinanzi all'imponente struttura.\n\n");
            						move = true;
            					}else 
            						out.println("Non ti consiglio di uscire disarmato con tutti quei non morti nei dintorni ! ");
