@@ -36,3 +36,15 @@ Caused by: java.lang.IllegalStateException: The file is locked: nio:C:/Users/rom
 	at org.h2.mvstore.FileStore.open(FileStore.java:172)
 	at org.h2.mvstore.MVStore.<init>(MVStore.java:381)
 	... 21 more
+2020-06-19 19:23:58 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'' (OBJECT: ""OPENABLE"" BOOLEAN)"; SQL statement:
+INSERT INTO "PUBLIC"."OBJECT"("ID","NAME","DESCRIPTION","ALIAS","OPENABLE","PICKUPABLE","PUSHABLE","OPEN","PUSH","CONTAINER","ISCONTAINER","ROOM","SPECIFIC_STATE","ARTICLE")VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?) -- (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14) [22018-199]
+2020-06-19 19:23:58 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'' (OBJECT: ""OPENABLE"" BOOLEAN)"; SQL statement:
+INSERT INTO "PUBLIC"."OBJECT"("ID","NAME","DESCRIPTION","ALIAS","OPENABLE","PICKUPABLE","PUSHABLE","OPEN","PUSH","CONTAINER","ISCONTAINER","ROOM","SPECIFIC_STATE","ARTICLE")VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?) -- (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14) [22018-199]
+2020-06-19 19:25:52 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'FALSE' (OBJECT: ""CONTAINER"" INT)"; SQL statement:
+INSERT INTO "PUBLIC"."OBJECT"("ID","NAME","DESCRIPTION","ALIAS","OPENABLE","PICKUPABLE","PUSHABLE","OPEN","PUSH","CONTAINER","ISCONTAINER","ROOM","SPECIFIC_STATE","ARTICLE")VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?) -- (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14) [22018-199]
+2020-06-19 19:25:52 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'FALSE' (OBJECT: ""CONTAINER"" INT)"; SQL statement:
+INSERT INTO "PUBLIC"."OBJECT"("ID","NAME","DESCRIPTION","ALIAS","OPENABLE","PICKUPABLE","PUSHABLE","OPEN","PUSH","CONTAINER","ISCONTAINER","ROOM","SPECIFIC_STATE","ARTICLE")VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?) -- (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14) [22018-199]
