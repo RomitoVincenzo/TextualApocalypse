@@ -120,7 +120,7 @@ public class TextualApocalypse extends GameDescription {
 	            //set starting room
 	           // setCurrentRoom(roomById(1));
 	            /////MODIFICHE PER FAST RUN
-	            setCurrentRoom(roomById(11));
+	            setCurrentRoom(roomById(18));
 	            weapon = true;
 	            AdvObjectContainer c = (AdvObjectContainer) roomById(5).objectById(1);
 	            getInventory().add(roomById(5).getContainedObjects().get(0));
