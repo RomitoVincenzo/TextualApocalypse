@@ -5125,3 +5125,15 @@ INSERT INTO "PUBLIC"."ROOM"("ID","NAME","DESCRIPTION","VISIBLE","SOUTH","NORTH",
 2020-06-19 12:59:41 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'' (ROOM: ""VISIBLE"" BOOLEAN)"; SQL statement:
 INSERT INTO "PUBLIC"."ROOM"("ID","NAME","DESCRIPTION","VISIBLE","SOUTH","NORTH","EAST","WEST","UP","DOWN")VALUES(?,?,?,?,?,?,?,?,?,?) -- (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10) [22018-199]
+2020-06-19 13:38:38 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'' (ROOM: ""VISIBLE"" BOOLEAN)"; SQL statement:
+INSERT INTO "PUBLIC"."ROOM"("ID","NAME","DESCRIPTION","VISIBLE","SOUTH","NORTH","EAST","WEST","UP","DOWN")VALUES(?,?,?,?,?,?,?,?,?,?) -- (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10) [22018-199]
+2020-06-19 13:38:38 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'' (ROOM: ""VISIBLE"" BOOLEAN)"; SQL statement:
+INSERT INTO "PUBLIC"."ROOM"("ID","NAME","DESCRIPTION","VISIBLE","SOUTH","NORTH","EAST","WEST","UP","DOWN")VALUES(?,?,?,?,?,?,?,?,?,?) -- (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10) [22018-199]
+2020-06-19 13:39:25 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'TRUE ' (ROOM: ""VISIBLE"" BOOLEAN)"; SQL statement:
+INSERT INTO "PUBLIC"."ROOM"("ID","NAME","DESCRIPTION","VISIBLE","SOUTH","NORTH","EAST","WEST","UP","DOWN")VALUES(?,?,?,?,?,?,?,?,?,?) -- (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10) [22018-199]
+2020-06-19 13:39:25 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'TRUE ' (ROOM: ""VISIBLE"" BOOLEAN)"; SQL statement:
+INSERT INTO "PUBLIC"."ROOM"("ID","NAME","DESCRIPTION","VISIBLE","SOUTH","NORTH","EAST","WEST","UP","DOWN")VALUES(?,?,?,?,?,?,?,?,?,?) -- (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10) [22018-199]
