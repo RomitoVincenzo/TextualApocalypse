@@ -44,8 +44,9 @@ import java.util.Set;
 public class TextualApocalypse extends GameDescription {
 	
 	boolean radioComunication = false;
+	boolean doctorComunication = false;
 	boolean weapon = false;
-	
+
     @Override
     public void init() throws Exception {    	
     		//prologue();
@@ -119,7 +120,7 @@ public class TextualApocalypse extends GameDescription {
 	            //set starting room
 	           // setCurrentRoom(roomById(1));
 	            /////MODIFICHE PER FAST RUN
-	            setCurrentRoom(roomById(10));
+	            setCurrentRoom(roomById(11));
 	            weapon = true;
 	            AdvObjectContainer c = (AdvObjectContainer) roomById(5).objectById(1);
 	            getInventory().add(roomById(5).getContainedObjects().get(0));
@@ -174,6 +175,15 @@ public class TextualApocalypse extends GameDescription {
                     		getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
                     		move = true;
                 		}
+                	} else if (getCurrentRoom().getId() == 10){
+                		if(!doctorComunication)
+                			out.println("Faresti meglio a parlare con il dottore");
+                		else 
+                		{
+                    		setCurrentRoom(roomById(getCurrentRoom().getNorth()));
+                    		getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
+                    		move = true;
+                		}
                 	} else 
                 	{
                 		setCurrentRoom(roomById(getCurrentRoom().getNorth()));
@@ -185,25 +195,64 @@ public class TextualApocalypse extends GameDescription {
                 }
             } else if (p.getCommand().getType() == CommandType.SOUTH) {
                 if (getCurrentRoom().getSouth() != 0) {
-                	setCurrentRoom(roomById(getCurrentRoom().getSouth()));
-                	getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
-                    move = true;
+                	if(getCurrentRoom().objectByName("Zombie") != null) {
+                		if(getCurrentRoom().objectByName("Zombie").getSpecificState().equals("vivo")) {
+                			slowPrint("Il dottore ti aveva avvisato, un'orda di zombie ti riduce a brandelli dopo aver masticato la tua carne");
+                			end(out);
+                		}else
+                		{
+                        	setCurrentRoom(roomById(getCurrentRoom().getSouth()));
+                        	getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
+                            move = true;
+                		}
+                	} else 
+                	{
+                		setCurrentRoom(roomById(getCurrentRoom().getSouth()));
+                		getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
+                		move = true;
+                	}
                 } else {
                     noroom = true;
                 }
             } else if (p.getCommand().getType() == CommandType.EAST) {
                 if (getCurrentRoom().getEast() != 0) {
-                	setCurrentRoom(roomById(getCurrentRoom().getEast()));
-                	getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
-                    move = true;
+                	if(getCurrentRoom().objectByName("Zombie") != null) {
+                		if(getCurrentRoom().objectByName("Zombie").getSpecificState().equals("vivo")) {
+                			slowPrint("Il dottore ti aveva avvisato, un'orda di zombie ti riduce a brandelli dopo aver masticato la tua carne");
+                			end(out);
+                		}else
+                		{
+                        	setCurrentRoom(roomById(getCurrentRoom().getEast()));
+                        	getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
+                            move = true;
+                		}
+                	} else 
+                	{
+                		setCurrentRoom(roomById(getCurrentRoom().getEast()));
+                		getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
+                		move = true;
+                	}
                 } else {
                     noroom = true;
                 }
             } else if (p.getCommand().getType() == CommandType.WEST) {
                 if (getCurrentRoom().getWest() != 0) {
-                	setCurrentRoom(roomById(getCurrentRoom().getWest()));
-                	getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
-                    move = true;
+                	if(getCurrentRoom().objectByName("Zombie") != null) {
+                		if(getCurrentRoom().objectByName("Zombie").getSpecificState().equals("vivo")) {
+                			slowPrint("Il dottore ti aveva avvisato, un'orda di zombie ti riduce a brandelli dopo aver masticato la tua carne");
+                			end(out);
+                		}else
+                		{
+                        	setCurrentRoom(roomById(getCurrentRoom().getWest()));
+                        	getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
+                            move = true;
+                		}
+                	} else 
+                	{
+                		setCurrentRoom(roomById(getCurrentRoom().getWest()));
+                		getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
+                		move = true;
+                	}
                 } else {
                     noroom = true;
                 }    
@@ -284,6 +333,12 @@ public class TextualApocalypse extends GameDescription {
            					out.println("Dove vorresti andare senza benzina??");
            			} else 
            				out.println("Non hai dove andare");
+            	}else if(p.getInvObject().getId()==43 && getCurrentRoom().getId()== 15 ) {
+            		if(getCurrentRoom().objectById(36).getSpecificState().equals("non funzionante")) {
+            			getInventory().remove(p.getInvObject());
+            			getCurrentRoom().objectById(36).setSpecificState("funzionante");
+            			roomById(13).objectById(32).setSpecificState("funzionante");
+            		} 
             	}else 
             		out.println("Impossibile utilizzare l'oggetto");
             }else if (p.getCommand().getType() == CommandType.TALK_TO && p.getObject().getId()>0) {
@@ -293,7 +348,10 @@ public class TextualApocalypse extends GameDescription {
             				"        hanno preso il controllo di molte stanze.\r\n" + 
             				"        Il tuo compito e' quelllo di arrivare nella sala provette, situata al piano superiore e di recuperare la seguente provetta : VFRR.\r\n" + 
             				"        La stanza è protetta dal nostro sistema SRAC, lo stesso che ti ha sottoposto il test all'ingresso. \r\n" + 
-            				"        Arrivarci non sarà facile ma non mi resta che augurarti buona fortuna.”"+"\n");
+            				"        Arrivarci non sarà facile ma non mi resta che augurarti buona fortuna."+"\n"+
+            				"        Un conisglio : nel caso dovessi entrare in contatto con uno zombie non esistare ad ucciderlo, \r\n" + 
+            				"        uno zombie in allerta può causarti molti danni” \r\n " );
+            		doctorComunication=true;
             	}
             	
         	}else if (p.getCommand().getType() == CommandType.INVENTORY) {
@@ -363,7 +421,13 @@ public class TextualApocalypse extends GameDescription {
             		slowPrint("BOOOMM , che botto !!!" +"\n"+
             				"In un secondo l'aria si colora di rosso e una pioggia di sangue ricopre l'intera area ."+"\n"
             				+"Hai fatto salta in aria quei non morti facendo esplodere quel barile. \n");
-            	}
+            	} else if (p.getObject().getName().equals("Zombie")) {
+            		if(p.getObject().getSpecificState().equals("vivo")) {
+                		p.getObject().setSpecificState("morto");
+                		out.println("Hai ucciso uno Zombie ");
+            		} else
+            			out.println("Conserva le munizioni soldato");
+            	} 
         	} else if (p.getCommand().getType() == CommandType.PULL && p.getObject().getId() >0) {
             	if(p.getObject().getId() == 26) {
             		if(getCurrentRoom().objectById(23).getSpecificState().equals("non in moto")) {
@@ -423,18 +487,47 @@ public class TextualApocalypse extends GameDescription {
                     if (p.getObject().getId() >0) {
                         if (p.getObject().isOpenable() && p.getObject().isOpen() == false) {
                             if (p.getObject() instanceof AdvObjectContainer) {
-                                p.getObject().setOpen(true);
-                                out.println("Hai aperto: "+p.getObject().getArticle()+" "  + p.getObject().getName());
-                                AdvObjectContainer c = (AdvObjectContainer) p.getObject();
-                                if (!c.getList().isEmpty()) {
-                                    out.print(c.getName() + " contiene:");
-                                    Iterator<AdvObject> it = c.getList().iterator();
-                                    while (it.hasNext()) {
-                                        AdvObject next = it.next();
-                                        out.print(" " + next.getName());
+                            	if(p.getObject().getId()==42) {
+                            		Scanner scanner = new Scanner(System.in);
+                            		String command ;
+                            		slowPrint("[SRAC] : Qui sistema automatico di riconoscimento attivita' celebrale umana !\r\n" + 
+                            				"         per aprire l'armadietto bisogna superare il seguente test :\r\n" + 
+                            				"         Quanti quadrati ci sono in figura?? ");
+                            		//stampaQuadrato();
+                            		command = scanner.nextLine();
+                            		out.println();
+                            		if (command.equals("quaranta") || command.equals("40")) {
+                                        out.println("Hai aperto: "+p.getObject().getArticle()+" "  + p.getObject().getName());
+                            			p.getObject().setOpen(true);
+                            			p.getObject().setSpecificState("aperto");
+                                        AdvObjectContainer c = (AdvObjectContainer) p.getObject();
+                                        if (!c.getList().isEmpty()) {
+                                            out.print(c.getName() + " contiene:");
+                                            Iterator<AdvObject> it = c.getList().iterator();
+                                            while (it.hasNext()) {
+                                                AdvObject next = it.next();
+                                                out.print(" " + next.getName());
+                                            }
+                                            out.println();
+                                        }
+                            			
+                            		} else
+                            			slowPrint("[SRAC] : Accesso negato\n");
+                            	} else
+                            	{
+                                    p.getObject().setOpen(true);
+                                    out.println("Hai aperto: "+p.getObject().getArticle()+" "  + p.getObject().getName());
+                                    AdvObjectContainer c = (AdvObjectContainer) p.getObject();
+                                    if (!c.getList().isEmpty()) {
+                                        out.print(c.getName() + " contiene:");
+                                        Iterator<AdvObject> it = c.getList().iterator();
+                                        while (it.hasNext()) {
+                                            AdvObject next = it.next();
+                                            out.print(" " + next.getName());
+                                        }
+                                        out.println();
                                     }
-                                    out.println();
-                                }
+                            	}
                             } else {
                             	//apri porte con chiavi
                             	if(p.getObject().getId()==5 && getInventory().objectInInventory(getInventory().objectById(18))==true) {

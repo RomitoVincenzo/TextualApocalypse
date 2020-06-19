@@ -231,5 +231,15 @@ public class Room {
     			ao=obj;
     		}
     	return ao;
+    } 
+    
+    public AdvObject objectByName(String Name)
+    {
+    	AdvObject ao = null;
+    	for(AdvObject obj : getObjects()) {
+    		if(obj.getName().equals(Name))
+    			ao=obj;
+    		}
+    	return ao;
     }  
 }
