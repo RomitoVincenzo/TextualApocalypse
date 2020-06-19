@@ -46,6 +46,7 @@ public class TextualApocalypse extends GameDescription {
 	boolean radioComunication = false;
 	boolean doctorComunication = false;
 	boolean weapon = false;
+	boolean provettaRitirata=false;
 
     @Override
     public void init() throws Exception {    	
@@ -120,7 +121,7 @@ public class TextualApocalypse extends GameDescription {
 	            //set starting room
 	           // setCurrentRoom(roomById(1));
 	            /////MODIFICHE PER FAST RUN
-	            setCurrentRoom(roomById(18));
+	            setCurrentRoom(roomById(21));
 	            weapon = true;
 	            AdvObjectContainer c = (AdvObjectContainer) roomById(5).objectById(1);
 	            getInventory().add(roomById(5).getContainedObjects().get(0));
@@ -352,13 +353,36 @@ public class TextualApocalypse extends GameDescription {
             	} else if(p.getObject().getId() == 32  && getCurrentRoom().getId()==13) {
             		slowPrint("[DOC] : “Hey!! Mi senti?? E' inutile che ti guardi intorno, ti sto parlando tramite la linea di emergenza dell'ascensore \r\n" + 
             				"        Ti porterà direttamente al piano con la sala contente le provette non ti preoccupare. \r\n"+
-            				"        Ho visto quello che hai fatto la' fuori, bel lavoro, ora ti manca solo lo sprint finale! .\r\n");
+            				"        Ho visto quello che hai fatto la' fuori, bel lavoro, ora ti manca solo lo sprint finale!” .\r\n");
             		slowPrint("L'ascensore si ferma a quello che sembra essere l'ultimo piano dell'edificio, \r\n "+
             				"        Appena metti piedi fuori dalle porte metallica un frastuono micidiale proviene da dietro di te: \r\n"+
             				"        E' l'ascensore, è crollato!");
             		setCurrentRoom(roomById(8));
 					getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
 					move=true;
+            	} else if(p.getObject().getId() == 45  && getCurrentRoom().getId()==21) {
+            		Scanner scanner = new Scanner(System.in);
+            		String command ;
+            		slowPrint("[Macchinario] : “Inserire numero di provetta desiderato”: ");
+            		command = scanner.nextLine();
+            		out.println();
+            		if (command.equals("VFRR") || command.equals("vfrr")) {
+            			if(!provettaRitirata)
+            			{
+	                		slowPrint("[Macchinario] : “Ecco a te la provetta” \n");
+	                		out.print("Hai ricevuto la provetta del tipo VFRR richiesta dal dottore\n");
+	                		AdvObject provetta = getCurrentRoom().getContainedObjects().get(0);
+	                		getInventory().add(provetta);
+	                		AdvObjectContainer macchinario = (AdvObjectContainer)p.getObject();
+	                		macchinario.remove(provetta);
+	                		provettaRitirata=true;
+            			}
+            			else
+            				slowPrint("[Macchinario] : “Questo tipo di provetta e' stato gia' ritirato” \n");
+            		}
+            		else {
+            			slowPrint("[Macchinario] : “Questo tipo di provetta non esiste” \n");
+            		}		
             	}else 
             		out.println("Impossibile utilizzare l'oggetto");
             }else if (p.getCommand().getType() == CommandType.TALK_TO && p.getObject().getId()>0) {
@@ -510,9 +534,9 @@ public class TextualApocalypse extends GameDescription {
                             	if(p.getObject().getId()==42) {
                             		Scanner scanner = new Scanner(System.in);
                             		String command ;
-                            		slowPrint("[SRAC] : Qui sistema automatico di riconoscimento attivita' celebrale umana !\r\n" + 
-                            				"         per aprire l'armadietto bisogna superare il seguente test :\r\n" + 
-                            				"         Quanti quadrati ci sono in figura?? ");
+                            		slowPrint("[SRAC] : “Qui sistema automatico di riconoscimento attivita' celebrale umana !\r\n" + 
+                            				"      per aprire l'armadietto bisogna superare il seguente test :\r\n" + 
+                            				"      Quanti quadrati ci sono in figura?? ”");
                             		//stampaQuadrato();
                             		command = scanner.nextLine();
                             		out.println();
@@ -532,7 +556,7 @@ public class TextualApocalypse extends GameDescription {
                                         }
                             			
                             		} else
-                            			slowPrint("[SRAC] : Accesso negato\n");
+                            			slowPrint("“[SRAC] : Accesso negato”\n");
                             	} else
                             	{
                                     p.getObject().setOpen(true);
@@ -561,16 +585,17 @@ public class TextualApocalypse extends GameDescription {
                             	else if(p.getObject().getId()==44){
                             		Scanner scanner = new Scanner(System.in);
                             		String command ;
-                            		slowPrint("[SRAC] : Qui sistema automatico di riconoscimento attivita' celebrale umana !\r\n" + 
-                            				"           Prego inserire la password per accedere all'area\n");
+                            		slowPrint("[SRAC] : “Qui sistema automatico di riconoscimento attivita' celebrale umana !\r\n" + 
+                            				"         Prego inserire la password per accedere all'area”: ");
                             		command = scanner.nextLine();
+                            		out.println();
                             		if(command.equals("ciaociao")) {
                                         p.getObject().setOpen(true);
                                         p.getObject().setSpecificState("aperta");
-                                        slowPrint("[SRAC] : Complimenti password corretta !\r\n");
+                                        slowPrint("[SRAC] : “Complimenti password corretta !”\r\n");
                             		}
                             		else {
-                            			slowPrint("[SRAC] : Password errata !\r\n");
+                            			slowPrint("[SRAC] : “Password errata : ricordati, ci piace andare a destra in questo edificio !”\r\n");
                             		}
                             	}else {
                             		if(p.getObject().getId()==20) {
