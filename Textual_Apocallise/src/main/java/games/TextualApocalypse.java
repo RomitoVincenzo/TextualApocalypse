@@ -184,7 +184,16 @@ public class TextualApocalypse extends GameDescription {
                     		getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
                     		move = true;
                 		}
-                	} else 
+                	} else if (getCurrentRoom().getId() == 20){
+                		if(!getCurrentRoom().objectById(44).isOpen())
+                			out.println("Non puoi andare di la', la porta e' chiusa");
+                		else 
+                		{
+                    		setCurrentRoom(roomById(getCurrentRoom().getNorth()));
+                    		getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
+                    		move = true;
+                		}
+                	}else 
                 	{
                 		setCurrentRoom(roomById(getCurrentRoom().getNorth()));
                 		getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
@@ -296,7 +305,14 @@ public class TextualApocalypse extends GameDescription {
                     		out.println("Hai aperto la botola");
                     	    getCurrentRoom().objectById(5).setOpen(true);
                     	    p.getObject().setSpecificState("aperta");
-            		}else
+            		} else if(p.getInvObject().getId()==43 && getCurrentRoom().getId()== 15 ) {
+                		if(getCurrentRoom().objectById(36).getSpecificState().equals("non funzionante")) {
+                			getInventory().remove(p.getInvObject());
+                			getCurrentRoom().objectById(36).setSpecificState("funzionante");
+                			roomById(13).objectById(32).setSpecificState("funzionante");
+                			out.println("Complimenti sei riuscito ad aggiustare il quadro elettrico, ora e' tornata l'elettricità all'interno del piano!! \n");
+                		} 
+                	}else
             			out.println("Non vedo come potrei usarlo qui");	
             	} else
             		out.println("Non vedo questo oggetto");
@@ -333,12 +349,16 @@ public class TextualApocalypse extends GameDescription {
            					out.println("Dove vorresti andare senza benzina??");
            			} else 
            				out.println("Non hai dove andare");
-            	}else if(p.getInvObject().getId()==43 && getCurrentRoom().getId()== 15 ) {
-            		if(getCurrentRoom().objectById(36).getSpecificState().equals("non funzionante")) {
-            			getInventory().remove(p.getInvObject());
-            			getCurrentRoom().objectById(36).setSpecificState("funzionante");
-            			roomById(13).objectById(32).setSpecificState("funzionante");
-            		} 
+            	} else if(p.getObject().getId() == 32  && getCurrentRoom().getId()==13) {
+            		slowPrint("[DOC] : “Hey!! Mi senti?? E' inutile che ti guardi intorno, ti sto parlando tramite la linea di emergenza dell'ascensore \r\n" + 
+            				"        Ti porterà direttamente al piano con la sala contente le provette non ti preoccupare. \r\n"+
+            				"        Ho visto quello che hai fatto la' fuori, bel lavoro, ora ti manca solo lo sprint finale! .\r\n");
+            		slowPrint("L'ascensore si ferma a quello che sembra essere l'ultimo piano dell'edificio, \r\n "+
+            				"        Appena metti piedi fuori dalle porte metallica un frastuono micidiale proviene da dietro di te: \r\n"+
+            				"        E' l'ascensore, è crollato!");
+            		setCurrentRoom(roomById(8));
+					getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
+					move=true;
             	}else 
             		out.println("Impossibile utilizzare l'oggetto");
             }else if (p.getCommand().getType() == CommandType.TALK_TO && p.getObject().getId()>0) {
@@ -538,7 +558,21 @@ public class TextualApocalypse extends GameDescription {
                             	else if(p.getObject().getId()==5 && !getInventory().objectInInventory(getInventory().objectById(18))){
                             		out.println("Non disponi delle chiavi per aprire questa porta");
                             	}
-                            	else {
+                            	else if(p.getObject().getId()==44){
+                            		Scanner scanner = new Scanner(System.in);
+                            		String command ;
+                            		slowPrint("[SRAC] : Qui sistema automatico di riconoscimento attivita' celebrale umana !\r\n" + 
+                            				"           Prego inserire la password per accedere all'area\n");
+                            		command = scanner.nextLine();
+                            		if(command.equals("ciaociao")) {
+                                        p.getObject().setOpen(true);
+                                        p.getObject().setSpecificState("aperta");
+                                        slowPrint("[SRAC] : Complimenti password corretta !\r\n");
+                            		}
+                            		else {
+                            			slowPrint("[SRAC] : Password errata !\r\n");
+                            		}
+                            	}else {
                             		if(p.getObject().getId()==20) {
                             			slowPrint("Apri la porta lentamente ma un non morto ti affera dal braccio scaravendatoti fuori dalla porta.\n" + 
                   							  "In un men che non si dica vieni circondato da un'orda di zombi che ti riduce a brandelli.\n");
@@ -716,6 +750,10 @@ public class TextualApocalypse extends GameDescription {
     			" - ISTRUZIONI ti mostra tutto ciò che hai appena visto\r\n\n" + 
     			"Divertiti con la nostra Apocalisse Testuale!\r\n" + 
     			"");
+    }
+    
+    public void stampaQuadrato() {
+    	//
     }
    
     public void formattedString(String input) {
