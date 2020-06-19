@@ -46,6 +46,8 @@ public class Parser {
                     int ioinv = -1;
                     if (io < 0 && tokens.length > 2) {
                         io = checkForObject(tokens[2], objects);
+                        if (io < 0 && tokens.length > 3) 
+                            io = checkForObject(tokens[3], objects);
                     }
                     if (io < 0) {
                         ioinv = checkForObject(tokens[1], inventory);

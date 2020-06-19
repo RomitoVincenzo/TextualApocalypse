@@ -39,7 +39,7 @@ import java.util.Set;
  * del file o del DBMS dovrebbe anche essere codificata la logica del gioco
  * (nextMove) oltre alla descrizione di stanze, oggetti, ecc...
  *
- * @author pierpaolo
+
  */
 public class TextualApocalypse extends GameDescription {
 	
@@ -117,9 +117,9 @@ public class TextualApocalypse extends GameDescription {
 	            rs4.close();
 	            pstm4.close();
 	            //set starting room
-	            //setCurrentRoom(roomById(1));
+	           // setCurrentRoom(roomById(1));
 	            /////MODIFICHE PER FAST RUN
-	            setCurrentRoom(roomById(9));
+	            setCurrentRoom(roomById(10));
 	            weapon = true;
 	            AdvObjectContainer c = (AdvObjectContainer) roomById(5).objectById(1);
 	            getInventory().add(roomById(5).getContainedObjects().get(0));
@@ -147,26 +147,32 @@ public class TextualApocalypse extends GameDescription {
                 		} else if (getCurrentRoom().objectById(29).getSpecificState().equals("elettrificato")) {
                 			Scanner scanner = new Scanner(System.in);
                 			String command = "";
-                			slowPrint("[VOCE] : Qui sistema automatico di riconoscimento attivita' celebrale umana !\r\n" + 
+                			slowPrint("[SRAC] : Qui sistema automatico di riconoscimento attivita' celebrale umana !\r\n" + 
                 					"         per accedere all'interno della struttura bisogna superare il seguente test :\r\n" + 
                 					"         D I E C I : cinque\r\n" + 
                 					"         D O D I C I : sei\r\n" + 
                 					"         Q U A T T R O : ");
                 			command = scanner.nextLine();
-                			if (command.equals("2") || command.equals("due")){
-                				slowPrint("[VOCE] : Benvenuto all'interno del laboratorio ! \n");
+                			if (command.equals("7") || command.equals("sette")){
+                				slowPrint("[SRAC] : Benvenuto all'interno del laboratorio ! \n");
                 				slowPrint("Il grande Tesla Gate si spegne dinanzi ai tuoi occhi liberando cosi' il passaggio \n");
                 				getCurrentRoom().objectById(29).setSpecificState("spento");
                 				move = true;
                         		setCurrentRoom(roomById(getCurrentRoom().getNorth()));
                         		getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
+                        		out.println();
                 			} else 
                 			{
-                				out.println("[VOCE] : ERRATO");
+                				out.println("\n[SRAC] : ERRATO");
                 				slowPrint("Cerchi di attraversare il cancello elettrico nonostante il fallimento .. 2000 V attraversano il tuo corpo \nbruciandoti vivo.");
                 				end(out);
                 					
                 			}
+                		} else 
+                		{
+                    		setCurrentRoom(roomById(getCurrentRoom().getNorth()));
+                    		getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
+                    		move = true;
                 		}
                 	} else 
                 	{
@@ -280,11 +286,17 @@ public class TextualApocalypse extends GameDescription {
            				out.println("Non hai dove andare");
             	}else 
             		out.println("Impossibile utilizzare l'oggetto");
-            }
-            /*else if (p.getCommand().getType() == CommandType.USE && p.getObject().getId() == -2) {
-            	out.println("Non mi hai detto cosa usare");}*/
-            
-            else if (p.getCommand().getType() == CommandType.INVENTORY) {
+            }else if (p.getCommand().getType() == CommandType.TALK_TO && p.getObject().getId()>0) {
+            	if(p.getObject().getId() == 31) {
+            		slowPrint("[DOC] : “Menomale che sei qui ,ti aspettavo!! \r\n" + 
+            				"        Appena varcata quella porta troverai la terra di nessuno, i non morti sono riusciti ad entrare nella struttura e \r\n"+
+            				"        hanno preso il controllo di molte stanze.\r\n" + 
+            				"        Il tuo compito e' quelllo di arrivare nella sala provette, situata al piano superiore e di recuperare la seguente provetta : VFRR.\r\n" + 
+            				"        La stanza è protetta dal nostro sistema SRAC, lo stesso che ti ha sottoposto il test all'ingresso. \r\n" + 
+            				"        Arrivarci non sarà facile ma non mi resta che augurarti buona fortuna.”"+"\n");
+            	}
+            	
+        	}else if (p.getCommand().getType() == CommandType.INVENTORY) {
             	if(getInventory().getList().isEmpty())
             		out.println("Il inventario e' vuoto ");
             	else
@@ -425,8 +437,7 @@ public class TextualApocalypse extends GameDescription {
                                 }
                             } else {
                             	//apri porte con chiavi
-                            	if(p.getObject().getId()==5 && getInventory().objectInInventory(getInventory().objectById(18)))
-                            	{
+                            	if(p.getObject().getId()==5 && getInventory().objectInInventory(getInventory().objectById(18))==true) {
                             		out.println("Hai aperto: "+p.getObject().getArticle()+" "  + p.getObject().getName());
                             	    p.getObject().setOpen(true);
                             	    p.getObject().setSpecificState("aperta");

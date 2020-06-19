@@ -30,11 +30,16 @@ public class Inventory {
     public boolean objectInInventory(AdvObject o)
     {
     	boolean found=false;
-    	for(AdvObject obj : getList()) {
-    		if(obj.getId() == obj.getId())
-    			found=true;
-    		}
-    	return found;
+    	if(o==null)
+    		return found;
+    	else {
+        	for(AdvObject obj : getList()) {
+        		if(obj.getId() == o.getId())
+        			found=true;
+        		}
+        	return found;
+    	}
+
     }
     
     public AdvObject objectById(int Id)
