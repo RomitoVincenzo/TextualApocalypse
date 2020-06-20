@@ -110,12 +110,11 @@ public class TextualApocalypse extends GameDescription implements Serializable{
 	            //set starting room
 	           // setCurrentRoom(roomById(1));
 	            /////MODIFICHE PER FAST RUN
-	            setCurrentRoom(roomById(5));
+	            setCurrentRoom(roomById(1));
 	    		setDead(false);
-	            weapon = true;
+	            /*weapon = true;
 	            AdvObjectContainer c = (AdvObjectContainer) roomById(5).objectById(1);
-	            getInventory().add(roomById(5).getContainedObjects().get(0));
-	            ///////////
+	            getInventory().add(roomById(5).getContainedObjects().get(0));*/
 	            getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
     		}catch (SQLException ex){
     			System.err.println(ex.getSQLState() + ": " + ex.getMessage());
@@ -264,7 +263,7 @@ public class TextualApocalypse extends GameDescription implements Serializable{
                             	setCurrentRoom(roomById(getCurrentRoom().getUp()));
                             	getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
                                 move = true;
-                            	slowPrint("Appena metti piedi sul terrazzo la porta dietro di te si chiude investita dagli zombie che cercavano di raggiungerti");
+                            	slowPrint("Appena metti piedi sul terrazzo la porta dietro di te si chiude investita dagli zombie che cercavano di raggiungerti\n\n");
                     		} else
                     			out.println("Prima dovresti procurarti la provetta");
                 		} else 
@@ -764,6 +763,7 @@ public class TextualApocalypse extends GameDescription implements Serializable{
     			+ "Spero tu ti sia divertito perche' noi sicuramente si!! \r\n"
     			+"Alla prossima !?!?! \n\n";
     	slowPrint(message);
+    	setDead(true);
     }
    
     public void prologue() {
@@ -826,16 +826,16 @@ public class TextualApocalypse extends GameDescription implements Serializable{
     
     public void stampaQuadrato() {
     	System.out.println();
-    	System.out.println("\r\n" + 
-    			" ╔═══╦═══╦═══╦═══╗\r\n" + 
-    			" ║   ║ ╔═╬═╗ ║   ║\r\n" + 
-    			" ╠═══╬═╣═╬═╬═╬═══╣\r\n" + 
-    			" ║   ║ ╚═╬═╝ ║   ║\r\n" + 
-    			" ╠═══╬═══╬═══╬═══╣\r\n" + 
-    			" ║   ║ ╔═╬═╗ ║   ║\r\n" + 
-    			" ╠═══╬═╣═╬═╬═╬═══╣\r\n" + 
-    			" ║   ║ ╚═╬═╝ ║   ║\r\n" + 
-    			" ╚═══╩═══╩═══╩═══╝");
+        System.out.println("\r\n" +
+            " ╔═══╦═══╦═══╦═══╗\r\n" +
+            " ║   ║ ╔═╬═╗ ║   ║\r\n" +
+            " ╠═══╬═╬═╬═╬═╬═══╣\r\n" +
+            " ║   ║ ╚═╬═╝ ║   ║\r\n" +
+            " ╠═══╬═══╬═══╬═══╣\r\n" +
+            " ║   ║ ╔═╬═╗ ║   ║\r\n" +
+            " ╠═══╬═╬═╬═╬═╬═══╣\r\n" +
+            " ║   ║ ╚═╬═╝ ║   ║\r\n" +
+            " ╚═══╩═══╩═══╩═══╝");
     	System.out.println();
     }
    
