@@ -19,7 +19,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,30 +26,15 @@ import java.util.Properties;
 import java.util.Scanner;
 import java.util.Set;
 
-/**
- * ATTENZIONE: La descrizione del gioco Ã¨ fatta in modo che qualsiasi gioco
- * debba estendere la classe GameDescription. L'Engine Ã¨ fatto in modo che posso
- * eseguire qualsiasi gioco che estende GameDescription, in questo modo si
- * possono creare piÃ¹ gioci utilizzando lo stesso Engine.
- *
- * Diverse migliorie possono essere applicati: - la descrizione del gioco
- * potrebbe essere caricate da file o da DBMS in modo da non modificare il
- * codice sorgente - l'utilizzo di file e DBMS non Ã¨ semplice poichÃ© all'interno
- * del file o del DBMS dovrebbe anche essere codificata la logica del gioco
- * (nextMove) oltre alla descrizione di stanze, oggetti, ecc...
- *
-
- */
 public class TextualApocalypse extends GameDescription {
 	
-	boolean radioComunication = false;
-	boolean doctorComunication = false;
-	boolean weapon = false;
-	boolean provettaRitirata=false;
-
+	private boolean radioComunication = false;
+	private boolean doctorComunication = false;
+	private boolean weapon = false;
+	private boolean testTube=false;
+	
     @Override
     public void init() throws Exception {    	
-    		//prologue();
     		try{
 	    			Properties dbprops = new Properties();
 	    			dbprops.setProperty("user", "user");
@@ -268,9 +252,24 @@ public class TextualApocalypse extends GameDescription {
                 }    
             } else if (p.getCommand().getType() == CommandType.UP) {
                 if (getCurrentRoom().getUp() != 0) {
-                	setCurrentRoom(roomById(getCurrentRoom().getUp()));
-                	getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
-                    move = true;
+                	if(getCurrentRoom().getId()==19) {
+                		if(getCurrentRoom().objectById(48).getSpecificState() != null) {
+                     		if(testTube) {
+                            	setCurrentRoom(roomById(getCurrentRoom().getUp()));
+                            	getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
+                                move = true;
+                            	slowPrint("Appena metti piedi sul terrazzo la porta dietro di te si chiude investita dagli zombie che cercavano di raggiungerti");
+                    		} else
+                    			out.println("Prima dovresti procurarti la provetta");
+                		} else 
+                			out.println("Non vedo come potrei fare");
+   
+                	}else 
+                	{
+                    	setCurrentRoom(roomById(getCurrentRoom().getUp()));
+                    	getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
+                        move = true;
+                	}
                 } else {
                     noroom = true;
                 }    
@@ -280,7 +279,10 @@ public class TextualApocalypse extends GameDescription {
                     	setCurrentRoom(roomById(getCurrentRoom().getDown()));
                     	getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
                         move = true;
-                	} else 
+                	} else if(getCurrentRoom().getId()==22){
+                		outro();
+                	}
+                	else 
                 		noroom = true;
 
                 } else {
@@ -367,7 +369,7 @@ public class TextualApocalypse extends GameDescription {
             		command = scanner.nextLine();
             		out.println();
             		if (command.equals("VFRR") || command.equals("vfrr")) {
-            			if(!provettaRitirata)
+            			if(!testTube)
             			{
 	                		slowPrint("[Macchinario] : “Ecco a te la provetta” \n\n");
 	                		out.print("Hai ricevuto la provetta del tipo VFRR richiesta dal dottore\n");
@@ -375,7 +377,7 @@ public class TextualApocalypse extends GameDescription {
 	                		getInventory().add(provetta);
 	                		AdvObjectContainer macchinario = (AdvObjectContainer)p.getObject();
 	                		macchinario.remove(provetta);
-	                		provettaRitirata=true;
+	                		testTube=true;
             			}
             			else
             				slowPrint("[Macchinario] : “Questo tipo di provetta e' stato gia' ritirato” \n");
@@ -535,9 +537,10 @@ public class TextualApocalypse extends GameDescription {
                             		Scanner scanner = new Scanner(System.in);
                             		String command ;
                             		slowPrint("[SRAC] : “Qui sistema automatico di riconoscimento attivita' celebrale umana !\r\n" + 
-                            				"      per aprire l'armadietto bisogna superare il seguente test :\r\n" + 
-                            				"      Quanti quadrati ci sono in figura?? ”");
-                            		//stampaQuadrato();
+                            				  "          per aprire l'armadietto bisogna superare il seguente test ”\r\n"); 
+                            				
+                            		stampaQuadrato();
+                            		slowPrint("[SRAC] : “Inserire il numero di quadrati prensenti in figura”: ");
                             		command = scanner.nextLine();
                             		out.println();
                             		if (command.equals("quaranta") || command.equals("40")) {
@@ -613,12 +616,17 @@ public class TextualApocalypse extends GameDescription {
                         }
                     }
                 }
-            } else if (p.getCommand().getType() == CommandType.PUSH) {
+            } else if (p.getCommand().getType() == CommandType.PUSH && p.getObject().getId() >0) {
                 //ricerca oggetti pushabili
-                if (p.getObject().getId() >0 && p.getObject().isPushable() && getCurrentRoom().objectInRoom(p.getObject())) {
-                    out.println("Hai premuto: " + p.getObject().getName());
-
-                }
+                if (p.getObject().isPushable() && !p.getObject().isPush() && getCurrentRoom().objectInRoom(p.getObject())) {
+                	if(getCurrentRoom().getId()==19 && p.getObject().getId()==47) {
+                		out.println("Hai spostato lo scaffale e hai notato quelle che possano sembrare delle...");
+                		getCurrentRoom().objectById(47).setSpecificState(null);
+                		getCurrentRoom().objectById(48).setSpecificState("che conducono al terrazzo");
+                		getCurrentRoom().objectById(47).setPush(true);
+                	}
+                } else
+                	out.println("Scaffale già spostato, conserva le tue energie");
              } else 
                     out.println("EHH ?? ");
             if (noroom) {
@@ -661,11 +669,11 @@ public class TextualApocalypse extends GameDescription {
 
     private void end(PrintStream out) {
         out.println("\r\n\n" +
-                "             @\r\n" +
-                "             @\r\n" +
-                "           @@@@@\r\n" +
-                "             @\r\n" +
-                "             @\r\n" +
+                "             @ \r\n" +
+                "             @ \r\n" +
+                "           @@@@@ \r\n" +
+                "             @ \r\n" +
+                "             @ \r\n" +
                 "         ____#_____\r\n" +
                 "        /         /\r\n" +
                 "       /   ~~~   /\r\n" +
@@ -717,7 +725,20 @@ public class TextualApocalypse extends GameDescription {
     	System.out.println("3) Ripassare le istruzioni"+"\n");
     	System.out.println("4) Smettere prima ancora di incominciare");
     }
- 
+    
+    public void outro() {
+    	String message ="\n\n[ FINE ]\n\n" + 
+    			"Scendi velocemente le scale al termine del quale sembra esserci il dottore che ti aspetta "+"\n"+
+    			"pronto a creare un antidoto per il virus T ma.. \r\n" + 
+    			"Senti un improvviso dolore allo stomaco , non sai cosa ti sta succedendo, chiudi le palpebre e le riapri ripetutamente," +"\n"+ 
+    			"ad un certo punto il tuo improvviso dolore sparisce e su di te una bambina che gioca con la tua maglietta: "+"\n"
+    			+ "Sei a casa, quella bambina e' tua figlia, e accanto a lei c'e' anche tua moglie \r\n" + 
+    			"Penso prorprio che la tua TEXTUAL APOCALYPSE fosse semplicemente un sogno, magari un incubo ecco" +"\n"
+    			+ "Spero tu ti sia divertito perche' noi sicuramente si!! \r\n"
+    			+"Alla prossima !?!?! \n\n";
+    	slowPrint(message);
+    }
+   
     public void prologue() {
     	String message ="\n\n[ PROLOGO ]\n\n" + 
     			"Nell’anno 2050 una terribile malattia infettiva si e' scatenata sull’intero Globo causando negli umani "+"\n"+
@@ -778,7 +799,18 @@ public class TextualApocalypse extends GameDescription {
     }
     
     public void stampaQuadrato() {
-    	//
+    	System.out.println();
+    	System.out.println("\r\n" + 
+    			" ╔═══╦═══╦═══╦═══╗\r\n" + 
+    			" ║   ║ ╔═╬═╗ ║   ║\r\n" + 
+    			" ╠═══╬═╣═╬═╬═╬═══╣\r\n" + 
+    			" ║   ║ ╚═╬═╝ ║   ║\r\n" + 
+    			" ╠═══╬═══╬═══╬═══╣\r\n" + 
+    			" ║   ║ ╔═╬═╗ ║   ║\r\n" + 
+    			" ╠═══╬═╣═╬═╬═╬═══╣\r\n" + 
+    			" ║   ║ ╚═╬═╝ ║   ║\r\n" + 
+    			" ╚═══╩═══╩═══╩═══╝");
+    	System.out.println();
     }
    
     public void formattedString(String input) {
@@ -812,5 +844,6 @@ public class TextualApocalypse extends GameDescription {
     	}
     	System.out.println();
     }
+    
 }
 

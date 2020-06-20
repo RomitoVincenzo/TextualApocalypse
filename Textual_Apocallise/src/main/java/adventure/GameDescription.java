@@ -14,10 +14,6 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author pierpaolo
- */
 public abstract class GameDescription {
 
     private final List<Room> rooms = new ArrayList();
@@ -28,7 +24,6 @@ public abstract class GameDescription {
 
     private Room currentRoom;
     
-
     public List<Room> getRooms() {
         return rooms;
     }
@@ -86,6 +81,5 @@ public abstract class GameDescription {
     public abstract void instructions();
     
     public abstract void formattedString(String input);
-    
 
 }

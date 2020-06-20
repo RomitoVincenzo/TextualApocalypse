@@ -88,9 +88,9 @@ public class Engine {
 	    		//carica partita
 	    		break;
 	    	case 3:
-	    		//istruzioni
+	    		game.instructions();
 	    		break;
-	    	case 4 :
+	    	case 4 : System.exit(0);
 	    		//exit
 	    		break;
     	}
