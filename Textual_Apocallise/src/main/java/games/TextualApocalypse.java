@@ -353,11 +353,11 @@ public class TextualApocalypse extends GameDescription {
            					out.println("Dove vorresti andare senza benzina??");
            			} else 
            				out.println("Non hai dove andare");
-            	} else if(p.getObject().getId() == 32  && getCurrentRoom().getId()==13) {
+            	} else if(p.getObject().getId() == 32  && getCurrentRoom().getId()==13 && p.getObject().getSpecificState().equals("funzionante")) {
             		slowPrint("[DOC] : “Hey!! Mi senti?? E' inutile che ti guardi intorno, ti sto parlando tramite la linea di emergenza dell'ascensore \r\n" + 
             				"        Ti porterà direttamente al piano con la sala contente le provette non ti preoccupare. \r\n"+
             				"        Ho visto quello che hai fatto la' fuori, bel lavoro, ora ti manca solo lo sprint finale!” .\r\n");
-            		slowPrint("L'ascensore si ferma a quello che sembra essere l'ultimo piano dell'edificio, \r\n"+
+            		slowPrint("L'ascensore si ferma a quello che sembra essere l'ultimo piano dell'edificio,\n"+
             				  "Appena metti piedi fuori dalle porte metallica un frastuono micidiale proviene da dietro di te: \r\n\n"+
             				  "E' l'ascensore, è crollato!\n");
             		setCurrentRoom(roomById(18));
