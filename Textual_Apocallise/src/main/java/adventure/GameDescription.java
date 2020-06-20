@@ -17,12 +17,10 @@ import java.util.List;
 public abstract class GameDescription {
 
     private final List<Room> rooms = new ArrayList();
-
     private final List<Command> commands = new ArrayList();
-
     private final Inventory inventory = new Inventory();
-
     private Room currentRoom;
+    private boolean dead = false;
     
     public List<Room> getRooms() {
         return rooms;
@@ -67,9 +65,7 @@ public abstract class GameDescription {
     	return flag;
     	
     }
-    
-    
-    
+   
     public abstract void prologue();
     
     public abstract void menu();
@@ -81,5 +77,13 @@ public abstract class GameDescription {
     public abstract void instructions();
     
     public abstract void formattedString(String input);
+    
+    public boolean isDead() {
+    	return this.dead;
+    }
+    
+    public void setDead(boolean dead) {
+    	 this.dead=dead;
+    }
 
 }

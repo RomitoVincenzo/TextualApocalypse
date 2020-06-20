@@ -105,10 +105,11 @@ public class TextualApocalypse extends GameDescription {
 	            //set starting room
 	           // setCurrentRoom(roomById(1));
 	            /////MODIFICHE PER FAST RUN
-	            setCurrentRoom(roomById(18));
-	            weapon = true;
+	            setCurrentRoom(roomById(1));
+	    		setDead(false);
+	            /*weapon = true;
 	            AdvObjectContainer c = (AdvObjectContainer) roomById(5).objectById(1);
-	            getInventory().add(roomById(5).getContainedObjects().get(0));
+	            getInventory().add(roomById(5).getContainedObjects().get(0));*/
 	            ///////////
 	            getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
     		}catch (SQLException ex){
@@ -129,7 +130,7 @@ public class TextualApocalypse extends GameDescription {
                 	if(getCurrentRoom().getId() == 9) {
                 		if(getCurrentRoom().objectById(28).getSpecificState().equals("affamata")) {
                 			slowPrint("Ti avevo avvisato... ti sei fatto notare e adesso sei circondato di zombie.. esplodi qualche colpo ma è tutto vano, dovevi darmi ascolto");
-                			end(out);
+                			end(out); 
                 		} else if (getCurrentRoom().objectById(29).getSpecificState().equals("elettrificato")) {
                 			Scanner scanner = new Scanner(System.in);
                 			String command = "";
@@ -491,8 +492,7 @@ public class TextualApocalypse extends GameDescription {
                 			slowPrint("Rimuovi l'asse e un non morto ti affera dalla gola scaravendatoti fuori dalla finestra.\n" + 
                 							  "In un men che non si dica vieni circondato da un'orda di zombi che ti riduce a brandelli.\n");
                 			end(out);
-                		}
-                		if(getCurrentRoom().objectContainer(p.getObject())!=null) {
+                		}else if(getCurrentRoom().objectContainer(p.getObject())!=null) {
                 			if(p.getObject().getId()==2 || p.getObject().getId()==3 || p.getObject().getId()==4 ) {
                 				if(weapon == false) {
                 					getInventory().add(p.getObject());
@@ -678,7 +678,7 @@ public class TextualApocalypse extends GameDescription {
                 "        /         /\r\n" +
                 "       /   ~~~   /\r\n" +
                 "      /   ~~~   /\n\n");
-        System.exit(0);
+        setDead(true);
     }
     
     public void firstScreen() {
@@ -743,7 +743,7 @@ public class TextualApocalypse extends GameDescription {
     	String message ="\n\n[ PROLOGO ]\n\n" + 
     			"Nell’anno 2050 una terribile malattia infettiva si e' scatenata sull’intero Globo causando negli umani "+"\n"+
     			"atteggiamenti quali stati di collera e desiderio incessante di nutrirsi di carne umana. \r\n" + 
-    			"Con il passare degli anni più e più persone sono morte e intere città andate in rovina. " +"\n"+ 
+    			"Con il passare degli anni piu' e piu' persone sono morte e intere città andate in rovina. " +"\n"+ 
     			"Il tuo addestramento nelle forze speciali ti ha consentito di rimanere in vita per tutto questo tempo "+"\n"
     			+ "e ora sei alla ricerca di altri superstiti. \r\n" + 
     			"Con gli operatori telefonici e Internet ormai fuori uso da anni  il tuo unico mezzo di comunicazione e'" +"\n"
@@ -783,17 +783,16 @@ public class TextualApocalypse extends GameDescription {
     			" - GUARDA LA STANZA.\r\n\n" + 
     			"Fra le azioni fondamentali ci sono:\r\n" + 
     			" - PRENDI qualcosa,\r\n" + 
-    			" - LASCIA qualcosa,\r\n" + 
     			" - GUARDA qualcosa, ad esempio GUARDA LA PROVETTA\r\n\n" + 
     			"Non usare frasi troppo complesse.\r\n\n" + 
     			"Ricorda che hai a disposizione un inventario e quando prenderai un oggetto quest’ultimo finirà lì dentro. Stai attento il tuo inventario non e' infinito.\r\n" + 
     			"Altri comandi importanti sono:\r\n" + 
     			" - DOVE ti dice dove ti trovi\r\n" + 
-    			" - COSA elenca il contenuto del tuo inventario\r\n" + 
+    			" - COSA, INVENTARIO o I elencano il contenuto del tuo inventario\r\n" + 
     			" - SAVE serve a registrare la situazione su disco e\r\n" + 
-    			" - LOAD a caricare la partita\r\n" + 
-    			" - BASTA chiude il gioco e\r\n" + 
-    			" - ISTRUZIONI ti mostra tutto ciò che hai appena visto\r\n\n" + 
+    			" - LOAD a caricare la partita (comando disponibile nel menu')\r\n" + 
+    			" - BASTA ti riporta al menu' principale e\r\n" + 
+    			" - ISTRUZIONI ti mostra tutto ciò che hai appena visto (comando disponibile nel menu')\r\n\n" + 
     			"Divertiti con la nostra Apocalisse Testuale!\r\n" + 
     			"");
     }
