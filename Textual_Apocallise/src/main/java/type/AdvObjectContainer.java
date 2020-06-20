@@ -5,6 +5,7 @@
  */
 package type;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -13,7 +14,7 @@ import java.util.Set;
  *
  * @author pierpaolo
  */
-public class AdvObjectContainer extends AdvObject {
+public class AdvObjectContainer extends AdvObject implements Serializable{
 
     private List<AdvObject> list = new ArrayList();
 

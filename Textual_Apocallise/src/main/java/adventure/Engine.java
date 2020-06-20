@@ -11,7 +11,9 @@ import parser.ParserOutput;
 import type.AdvObject;
 import type.CommandType;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ import java.sql.Statement;
 
 public class Engine {			
 
-    private final GameDescription game;			//gioco
+    private  GameDescription game;			//gioco
     
     private final Parser parser;
 
@@ -61,32 +63,23 @@ public class Engine {
     	switch(Integer.parseInt(command)) {
 	    	case 1:
 	    		//nuova partita
-	            game.prologue();
-	            game.formattedString(game.getCurrentRoom().getDescription()+"\n");
-	        	for (AdvObject obj : game.getCurrentRoom().interactiveObjects()) 
-	        		System.out.println("Vedo "+obj.getArticle()+" "+obj.getName());
-	            System.out.print("\n  Cosa devo fare ? ");
-	            while (!game.isDead() && scanner.hasNextLine() ) {
-	            	System.out.println();
-	                command = scanner.nextLine();
-	                List<AdvObject> list = new ArrayList();
-	                list.addAll(game.getCurrentRoom().getObjects());
-	                list.addAll(game.getCurrentRoom().getContainedObjects());
-	                //list.addAll(game.getInventory().getList());
-	                ParserOutput p = parser.parse(command, game.getCommands(),list, game.getInventory().getList());
-	                if (p.getCommand() != null && p.getCommand().getType() == CommandType.END) {
-	                    System.out.println("Addio!\n\n");
-	                    game.setDead(true);
-	                    break;
-	                } else {
-	                    game.nextMove(p, System.out);
-	                }
-	                if(!game.isDead())
-	                	System.out.print("\n  Cosa devo fare ? ");
-	            }
+	            //game.prologue();
+	            iniziaGioco(command,scanner);
 	    		break;
 	    	case 2:
 	    		//carica partita
+	    		FileInputStream inFile= new FileInputStream("TA.dat");
+	    		ObjectInputStream inStream= new ObjectInputStream(inFile);
+			try {
+				game = (TextualApocalypse)inStream.readObject();
+	    		iniziaGioco(command,scanner);
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	    		break;
 	    	case 3:
 	    		game.instructions();
@@ -97,6 +90,31 @@ public class Engine {
 	    		break;
     	}
     	return game.isDead();
+    }
+    
+    public void iniziaGioco(String command,Scanner scanner) {
+	    game.formattedString(game.getCurrentRoom().getDescription()+"\n");
+		for (AdvObject obj : game.getCurrentRoom().interactiveObjects()) 
+			System.out.println("Vedo "+obj.getArticle()+" "+obj.getName());
+	    System.out.print("\n  Cosa devo fare ? ");
+	    while (!game.isDead() && scanner.hasNextLine() ) {
+	    	System.out.println();
+	        command = scanner.nextLine();
+	        List<AdvObject> list = new ArrayList();
+	        list.addAll(game.getCurrentRoom().getObjects());
+	        list.addAll(game.getCurrentRoom().getContainedObjects());
+	        //list.addAll(game.getInventory().getList());
+	        ParserOutput p = parser.parse(command, game.getCommands(),list, game.getInventory().getList());
+	        if (p.getCommand() != null && p.getCommand().getType() == CommandType.END) {
+	            System.out.println("Addio!\n\n");
+	            game.setDead(true);
+	            break;
+	        } else {
+	            game.nextMove(p, System.out);
+	        }
+	        if(!game.isDead())
+	        	System.out.print("\n  Cosa devo fare ? ");
+	    }
     }
 
     public static void main(String[] args) throws Exception {

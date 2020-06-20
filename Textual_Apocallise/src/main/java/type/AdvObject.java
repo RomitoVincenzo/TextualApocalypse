@@ -5,6 +5,7 @@
  */
 package type;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +14,7 @@ import java.util.Set;
  *
  * @author pierpaolo
  */
-public class AdvObject {
+public class AdvObject implements Serializable{
 
     private final int id;
 

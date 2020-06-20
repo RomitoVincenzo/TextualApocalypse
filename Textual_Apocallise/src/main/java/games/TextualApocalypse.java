@@ -13,7 +13,12 @@ import type.Command;
 import type.CommandType;
 import type.Room;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.PrintStream;
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -26,7 +31,7 @@ import java.util.Properties;
 import java.util.Scanner;
 import java.util.Set;
 
-public class TextualApocalypse extends GameDescription {
+public class TextualApocalypse extends GameDescription implements Serializable{
 	
 	private boolean radioComunication = false;
 	private boolean doctorComunication = false;
@@ -627,8 +632,30 @@ public class TextualApocalypse extends GameDescription {
                 	}
                 } else
                 	out.println("Scaffale già spostato, conserva le tue energie");
-             } else 
-                    out.println("EHH ?? ");
+             } else if(p.getCommand().getType() == CommandType.SAVE){
+            	 FileOutputStream outFile = null;
+				try {
+					outFile = new FileOutputStream("TA.dat");
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            	 ObjectOutputStream outStream = null;
+				try {
+					outStream = new ObjectOutputStream(outFile);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            	 try {
+					outStream.writeObject(this);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+             }
+             else      
+            	 out.println("EHH ?? ");
             if (noroom) {
                 out.println("Da quella parte non si puo' andare !!");
             } else if (move) {

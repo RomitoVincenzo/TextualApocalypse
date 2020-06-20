@@ -11,10 +11,11 @@ import type.Command;
 import type.Room;
 import type.Inventory;
 import java.io.PrintStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GameDescription {
+public abstract class GameDescription implements Serializable{
 
     private final List<Room> rooms = new ArrayList();
     private final List<Command> commands = new ArrayList();

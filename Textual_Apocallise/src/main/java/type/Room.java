@@ -5,6 +5,7 @@
  */
 package type;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ print("Sei nella" + room.getname() + print oggetti in stanza );
 /*
 * getListObject usato per la stampa degli oggetti in stanza.
 * */
-public class Room {
+public class Room implements Serializable{
 
     private final int id;
 
