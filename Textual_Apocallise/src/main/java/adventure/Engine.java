@@ -53,7 +53,6 @@ public class Engine {
     public boolean run() throws InterruptedException, IOException {
     	Scanner scanner = new Scanner(System.in);
     	String command = "0";
-        game.firstScreen();
     	game.menu();
     	do {
     		System.out.print("\n"+"Fai la tua scelta (1..4) ? ");
@@ -119,6 +118,7 @@ public class Engine {
 
     public static void main(String[] args) throws Exception {
         Engine engine = new Engine(new TextualApocalypse());
+        engine.game.firstScreen();
         boolean restart;
         do {
         	engine.game.init();

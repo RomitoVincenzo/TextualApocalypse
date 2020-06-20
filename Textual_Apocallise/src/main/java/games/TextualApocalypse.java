@@ -110,11 +110,11 @@ public class TextualApocalypse extends GameDescription implements Serializable{
 	            //set starting room
 	           // setCurrentRoom(roomById(1));
 	            /////MODIFICHE PER FAST RUN
-	            setCurrentRoom(roomById(1));
+	            setCurrentRoom(roomById(5));
 	    		setDead(false);
-	            /*weapon = true;
+	            weapon = true;
 	            AdvObjectContainer c = (AdvObjectContainer) roomById(5).objectById(1);
-	            getInventory().add(roomById(5).getContainedObjects().get(0));*/
+	            getInventory().add(roomById(5).getContainedObjects().get(0));
 	            ///////////
 	            getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
     		}catch (SQLException ex){
@@ -398,7 +398,7 @@ public class TextualApocalypse extends GameDescription implements Serializable{
             		slowPrint("[DOC] : “Menomale che sei qui ,ti aspettavo!! \r\n" + 
             				"        Appena varcata quella porta troverai la terra di nessuno, i non morti sono riusciti ad entrare nella struttura e \r\n"+
             				"        hanno preso il controllo di molte stanze.\r\n" + 
-            				"        Il tuo compito e' quelllo di arrivare nella sala provette, situata al piano superiore e di recuperare la seguente provetta : VFRR.\r\n" + 
+            				"        Il tuo compito e' quello di arrivare nella sala provette, situata al piano superiore e di recuperare la seguente provetta : VFRR.\r\n" + 
             				"        La stanza è protetta dal nostro sistema SRAC, lo stesso che ti ha sottoposto il test all'ingresso. \r\n" + 
             				"        Arrivarci non sarà facile ma non mi resta che augurarti buona fortuna."+"\n"+
             				"        Un conisglio : nel caso dovessi entrare in contatto con uno zombie non esistare ad ucciderlo, \r\n" + 
@@ -408,7 +408,7 @@ public class TextualApocalypse extends GameDescription implements Serializable{
             	
         	}else if (p.getCommand().getType() == CommandType.INVENTORY) {
             	if(getInventory().getList().isEmpty())
-            		out.println("Il inventario e' vuoto ");
+            		out.println("L'inventario e' vuoto ");
             	else
             	{
 	                out.println("Nel tuo inventario ci sono: ");
@@ -494,7 +494,7 @@ public class TextualApocalypse extends GameDescription implements Serializable{
                 if (getCurrentRoom().objectInRoom(p.getObject())||getCurrentRoom().objectContainer(p.getObject()).isOpen()){ 
                     if (p.getObject().isPickupable()) {
                 		if(p.getObject().getId()==10) {
-                			slowPrint("Rimuovi l'asse e un non morto ti affera dalla gola scaravendatoti fuori dalla finestra.\n" + 
+                			slowPrint("Rimuovi l'asse e un non morto ti affera dalla gola scaraventandoti fuori dalla finestra.\n" + 
                 							  "In un men che non si dica vieni circondato da un'orda di zombi che ti riduce a brandelli.\n");
                 			end(out);
                 		}else if(getCurrentRoom().objectContainer(p.getObject())!=null) {
