@@ -121,7 +121,7 @@ public class TextualApocalypse extends GameDescription {
 	            //set starting room
 	           // setCurrentRoom(roomById(1));
 	            /////MODIFICHE PER FAST RUN
-	            setCurrentRoom(roomById(21));
+	            setCurrentRoom(roomById(18));
 	            weapon = true;
 	            AdvObjectContainer c = (AdvObjectContainer) roomById(5).objectById(1);
 	            getInventory().add(roomById(5).getContainedObjects().get(0));
@@ -311,7 +311,7 @@ public class TextualApocalypse extends GameDescription {
                 			getInventory().remove(p.getInvObject());
                 			getCurrentRoom().objectById(36).setSpecificState("funzionante");
                 			roomById(13).objectById(32).setSpecificState("funzionante");
-                			out.println("Complimenti sei riuscito ad aggiustare il quadro elettrico, ora e' tornata l'elettricità all'interno del piano!! \n");
+                			out.print("Complimenti sei riuscito ad aggiustare il quadro elettrico, ora e' tornata l'elettricità all'interno del piano!! \n");
                 		} 
                 	}else
             			out.println("Non vedo come potrei usarlo qui");	
@@ -354,10 +354,10 @@ public class TextualApocalypse extends GameDescription {
             		slowPrint("[DOC] : “Hey!! Mi senti?? E' inutile che ti guardi intorno, ti sto parlando tramite la linea di emergenza dell'ascensore \r\n" + 
             				"        Ti porterà direttamente al piano con la sala contente le provette non ti preoccupare. \r\n"+
             				"        Ho visto quello che hai fatto la' fuori, bel lavoro, ora ti manca solo lo sprint finale!” .\r\n");
-            		slowPrint("L'ascensore si ferma a quello che sembra essere l'ultimo piano dell'edificio, \r\n "+
-            				"        Appena metti piedi fuori dalle porte metallica un frastuono micidiale proviene da dietro di te: \r\n"+
-            				"        E' l'ascensore, è crollato!");
-            		setCurrentRoom(roomById(8));
+            		slowPrint("L'ascensore si ferma a quello che sembra essere l'ultimo piano dell'edificio, \r\n"+
+            				  "Appena metti piedi fuori dalle porte metallica un frastuono micidiale proviene da dietro di te: \r\n\n"+
+            				  "E' l'ascensore, è crollato!\n");
+            		setCurrentRoom(roomById(18));
 					getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
 					move=true;
             	} else if(p.getObject().getId() == 45  && getCurrentRoom().getId()==21) {
@@ -369,7 +369,7 @@ public class TextualApocalypse extends GameDescription {
             		if (command.equals("VFRR") || command.equals("vfrr")) {
             			if(!provettaRitirata)
             			{
-	                		slowPrint("[Macchinario] : “Ecco a te la provetta” \n");
+	                		slowPrint("[Macchinario] : “Ecco a te la provetta” \n\n");
 	                		out.print("Hai ricevuto la provetta del tipo VFRR richiesta dal dottore\n");
 	                		AdvObject provetta = getCurrentRoom().getContainedObjects().get(0);
 	                		getInventory().add(provetta);
