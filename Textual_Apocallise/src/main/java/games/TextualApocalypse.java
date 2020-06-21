@@ -642,23 +642,20 @@ public class TextualApocalypse extends GameDescription implements Serializable{
 					 try {
 						outFile = new FileOutputStream("TA.dat");
 					 } catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						 out.println("Qualcosa e' andato storto");
 					 }
 		            	ObjectOutputStream outStream = null;
 					 try {
 						outStream = new ObjectOutputStream(outFile);
 					 } catch (IOException e) {
-						// TODO Auto-generated catch block
-					 	e.printStackTrace();
+						 out.println("Qualcosa e' andato storto");
 					 }
 		             try {
 		            	outStream.writeObject(this);
 						outStream.close();
 						out.println("Salvataggio avvenuto con successo");
 					 } catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						 out.println("Qualcosa e' andato storto");
 					 }
             	 }
             	 else
