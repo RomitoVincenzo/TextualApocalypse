@@ -632,29 +632,40 @@ public class TextualApocalypse extends GameDescription implements Serializable{
                 } else
                 	out.println("Scaffale già spostato, conserva le tue energie");
              } else if(p.getCommand().getType() == CommandType.SAVE){
-            	 FileOutputStream outFile = null;
-				try {
-					outFile = new FileOutputStream("TA.dat");
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-            	 ObjectOutputStream outStream = null;
-				try {
-					outStream = new ObjectOutputStream(outFile);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-            	 try {
-					outStream.writeObject(this);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-             }
-             else      
-            	 out.println("EHH ?? ");
+         		 Scanner scanner = new Scanner(System.in);
+         		 String command ;
+            	 out.print("Il salvataggio dell'attuale situazione di gioco sovrascrivera' i dati presenti su disco.\nDesideri continuare ugualmente(S/N): ");
+            	 command = scanner.nextLine();
+            	 if(command.equals("s")||command.contentEquals("S"))
+            	 {
+	            	 FileOutputStream outFile = null;
+					 try {
+						outFile = new FileOutputStream("TA.dat");
+					 } catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					 }
+		            	ObjectOutputStream outStream = null;
+					 try {
+						outStream = new ObjectOutputStream(outFile);
+					 } catch (IOException e) {
+						// TODO Auto-generated catch block
+					 	e.printStackTrace();
+					 }
+		             try {
+		            	outStream.writeObject(this);
+						outStream.close();
+						out.println("Salvataggio avvenuto con successo");
+					 } catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					 }
+            	 }
+            	 else
+            		 out.println("Salvataggio annullato");
+              }
+              else      
+            	  out.println("EHH ?? ");
             if (noroom) {
                 out.println("Da quella parte non si puo' andare !!");
             } else if (move) {

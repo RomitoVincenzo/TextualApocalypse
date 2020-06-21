@@ -12,6 +12,7 @@ import type.AdvObject;
 import type.CommandType;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.sql.Connection;
@@ -50,7 +51,7 @@ public class Engine {
         parser = new Parser();
     }
 
-    public boolean run() throws InterruptedException, IOException {
+    public boolean run(){
     	Scanner scanner = new Scanner(System.in);
     	String command = "0";
     	game.menu();
@@ -63,20 +64,19 @@ public class Engine {
 	    	case 1:
 	    		//nuova partita
 	            game.prologue();
-	            iniziaGioco(command,scanner);
+	            startGame(command,scanner);
 	    		break;
 	    	case 2:
 	    		//carica partita
+			try {
 	    		FileInputStream inFile= new FileInputStream("TA.dat");
 	    		ObjectInputStream inStream= new ObjectInputStream(inFile);
-			try {
 				game = (TextualApocalypse)inStream.readObject();
-	    		iniziaGioco(command,scanner);
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("Salvataggio caricato con successo\n");
+	    		startGame(command,scanner);
+			} catch (Exception e) {
+				System.out.println("File di salvataggio non trovato\n");
+				game.setDead(true);
 			}
 	    		break;
 	    	case 3:
@@ -90,7 +90,7 @@ public class Engine {
     	return game.isDead();
     }
     
-    public void iniziaGioco(String command,Scanner scanner) {
+    public void startGame(String command,Scanner scanner) {
 	    game.formattedString(game.getCurrentRoom().getDescription()+"\n");
 		for (AdvObject obj : game.getCurrentRoom().interactiveObjects()) 
 			System.out.println("Vedo "+obj.getArticle()+" "+obj.getName());
