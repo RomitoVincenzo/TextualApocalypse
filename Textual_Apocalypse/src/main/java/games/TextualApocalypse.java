@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package games;
 
 import adventure.GameDescription;
@@ -107,14 +103,8 @@ public class TextualApocalypse extends GameDescription implements Serializable{
 	           	}
 	            rs4.close();
 	            pstm4.close();
-	            //set starting room
-	           // setCurrentRoom(roomById(1));
-	            /////MODIFICHE PER FAST RUN
 	            setCurrentRoom(roomById(1));
 	    		setDead(false);
-	            /*weapon = true;
-	            AdvObjectContainer c = (AdvObjectContainer) roomById(5).objectById(1);
-	            getInventory().add(roomById(5).getContainedObjects().get(0));*/
 	            getCurrentRoom().setVisited(getCurrentRoom().getVisited()+1);
     		}catch (SQLException ex){
     			System.err.println(ex.getSQLState() + ": " + ex.getMessage());
@@ -374,6 +364,7 @@ public class TextualApocalypse extends GameDescription implements Serializable{
             		command = scanner.nextLine();
             		out.println();
             		if (command.equals("VFRR") || command.equals("vfrr")) {
+            			scanner.close();
             			if(!testTube)
             			{
 	                		slowPrint("[Macchinario] : “Ecco a te la provetta” \n\n");
@@ -548,6 +539,7 @@ public class TextualApocalypse extends GameDescription implements Serializable{
                             		command = scanner.nextLine();
                             		out.println();
                             		if (command.equals("quaranta") || command.equals("40")) {
+                            			scanner.close();
                                         out.println("Hai aperto: "+p.getObject().getArticle()+" "  + p.getObject().getName());
                             			p.getObject().setOpen(true);
                             			p.getObject().setSpecificState("aperto");
@@ -597,6 +589,7 @@ public class TextualApocalypse extends GameDescription implements Serializable{
                             		command = scanner.nextLine();
                             		out.println();
                             		if(command.equals("ciaociao")) {
+                            			scanner.close();
                                         p.getObject().setOpen(true);
                                         p.getObject().setSpecificState("aperta");
                                         slowPrint("[SRAC] : “Complimenti password corretta !”\r\n");
@@ -638,6 +631,7 @@ public class TextualApocalypse extends GameDescription implements Serializable{
             	 command = scanner.nextLine();
             	 if(command.equals("s")||command.contentEquals("S"))
             	 {
+            		 scanner.close();
 	            	 FileOutputStream outFile = null;
 					 try {
 						outFile = new FileOutputStream("TA.dat");

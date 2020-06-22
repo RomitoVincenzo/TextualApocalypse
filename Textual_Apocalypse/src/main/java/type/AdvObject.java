@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package type;
 
 import java.io.Serializable;
@@ -10,32 +5,18 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- *
- * @author pierpaolo
- */
 public class AdvObject implements Serializable{
 
     private final int id;
-
     private String name;
-
-    private String description;
-    
+    private String description;  
     private Set<String> alias;
-
     private boolean openable;
-
     private boolean pickupable;
-
     private boolean pushable;
-
     private boolean open;
-
-    private boolean push;
-            
-    private String specificState;
-    
+    private boolean push;          
+    private String specificState;   
     private String article;
 
     public AdvObject(int id) {

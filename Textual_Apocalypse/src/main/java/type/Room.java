@@ -1,50 +1,23 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package type;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
-/*abbiamo bisogno di una descrizione completa + oggetti stanza per la prima volta in 
-cui entra in stanza e per comando guarda 
-Quando il giocatore entrerà per la seconda volta nella stessa stanza verrà visualizzata
-una descizione corta + oggetti presenti in stanza con evenutali stati
-La descrizione corta può essere pensata come
-print("Sei nella" + room.getname() + print oggetti in stanza );
-*/
-
-/*
-* getListObject usato per la stampa degli oggetti in stanza.
-* */
 public class Room implements Serializable{
 
     private final int id;
-
     private String name;
-
-    private String description;
-    
+    private String description;   
     private boolean visible = true;
-
     private int south;
-
     private int north;
-
     private int east;
-
-    private int west;
-    
+    private int west;   
     private int up;
-
-    private int down;
-    
-    private int visited; //count visite in stanza
-        
+    private int down;   
+    private int visited;    
     private final List<AdvObject> objects = new ArrayList();
 
     public Room(int id) {

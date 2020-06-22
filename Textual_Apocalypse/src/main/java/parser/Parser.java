@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package parser;
 
 import type.AdvObject;
@@ -28,13 +24,6 @@ public class Parser {
         }
         return -1;
     }
-
-    /* ATTENZIONE: il parser è implementato in modo abbastanza independete dalla lingua mi riconosce solo 
-    * frasi semplici del tipo <azione> <oggetto> <oggetto> non permette di utilizzare articoli o preposizioni.
-    * L'utilizzo di articoli o preporsizioni lo renderebbero dipendente dalla lingua, o meglio bisognerebbe
-    * realizzare un parser per ogni lingua, prevedendo un'iterfaccia/classe astratta Perser e diverse
-    * implementazioni per ogni lingua.
-    */
     public ParserOutput parse(String command, List<Command> commands, List<AdvObject> objects, List<AdvObject> inventory) {
         String cmd = command.toLowerCase().trim();
         String[] tokens = cmd.split("\\s+");

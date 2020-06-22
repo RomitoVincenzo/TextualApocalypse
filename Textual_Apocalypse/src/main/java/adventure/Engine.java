@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package adventure;
 
 import games.TextualApocalypse;
@@ -10,35 +6,15 @@ import parser.Parser;
 import parser.ParserOutput;
 import type.AdvObject;
 import type.CommandType;
-
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.Scanner;
-
-import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
-/**
- * ATTENZIONE: l'Engine e' molto spartano, in realta'  demanda la logica alla
- * classe che implementa GameDescription e si occupa di gestire I/O sul
- * terminale.
- *
- */
 
 public class Engine {			
 
-    private  GameDescription game;			//gioco
-    
+    private  GameDescription game;		    
     private final Parser parser;
 
     public Engine(GameDescription game) {

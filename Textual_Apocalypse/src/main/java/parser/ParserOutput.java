@@ -1,23 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package parser;
 
 import type.AdvObject;
 import type.Command;
 
-/**
- *
- * @author pierpaolo
- */
 public class ParserOutput {
 
     private Command command;
-
     private AdvObject object;
-    
     private AdvObject invObject;
 
     public ParserOutput(Command command, AdvObject object) {
@@ -54,5 +43,4 @@ public class ParserOutput {
     public void setInvObject(AdvObject invObject) {
         this.invObject = invObject;
     }
-
 }
