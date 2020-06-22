@@ -39,13 +39,13 @@ public class Engine {
     	switch(Integer.parseInt(command)) {
 	    	case 1:
 	    		//nuova partita
-	            game.prologue();
+	            //game.prologue();JSDBVOSBNVOASNVASNVABVAISCNKZBZUOVSIOVNAOIBVOIDSNBOIBSIBN
 	            startGame(command,scanner);
 	    		break;
 	    	case 2:
 	    		//carica partita
 			try {
-	    		FileInputStream inFile= new FileInputStream("TA.dat");
+	    		FileInputStream inFile= new FileInputStream("./resources/savings/TA.dat");
 	    		ObjectInputStream inStream= new ObjectInputStream(inFile);
 				game = (TextualApocalypse)inStream.readObject();
 				System.out.println("Salvataggio caricato con successo\n");

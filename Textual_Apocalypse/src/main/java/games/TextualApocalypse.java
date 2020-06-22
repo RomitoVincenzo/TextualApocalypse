@@ -364,7 +364,7 @@ public class TextualApocalypse extends GameDescription implements Serializable{
             		command = scanner.nextLine();
             		out.println();
             		if (command.equals("VFRR") || command.equals("vfrr")) {
-            			scanner.close();
+            			
             			if(!testTube)
             			{
 	                		slowPrint("[Macchinario] : “Ecco a te la provetta” \n\n");
@@ -539,7 +539,7 @@ public class TextualApocalypse extends GameDescription implements Serializable{
                             		command = scanner.nextLine();
                             		out.println();
                             		if (command.equals("quaranta") || command.equals("40")) {
-                            			scanner.close();
+                            			
                                         out.println("Hai aperto: "+p.getObject().getArticle()+" "  + p.getObject().getName());
                             			p.getObject().setOpen(true);
                             			p.getObject().setSpecificState("aperto");
@@ -589,7 +589,7 @@ public class TextualApocalypse extends GameDescription implements Serializable{
                             		command = scanner.nextLine();
                             		out.println();
                             		if(command.equals("ciaociao")) {
-                            			scanner.close();
+                            			
                                         p.getObject().setOpen(true);
                                         p.getObject().setSpecificState("aperta");
                                         slowPrint("[SRAC] : “Complimenti password corretta !”\r\n");
@@ -631,10 +631,10 @@ public class TextualApocalypse extends GameDescription implements Serializable{
             	 command = scanner.nextLine();
             	 if(command.equals("s")||command.contentEquals("S"))
             	 {
-            		 scanner.close();
+            		 
 	            	 FileOutputStream outFile = null;
 					 try {
-						outFile = new FileOutputStream("TA.dat");
+						outFile = new FileOutputStream("./resources/savings/TA.dat");
 					 } catch (FileNotFoundException e) {
 						 out.println("Qualcosa e' andato storto");
 					 }
