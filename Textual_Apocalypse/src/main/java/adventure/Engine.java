@@ -48,10 +48,11 @@ public class Engine {
 	    		FileInputStream inFile= new FileInputStream("./resources/savings/TA.dat");
 	    		ObjectInputStream inStream= new ObjectInputStream(inFile);
 				game = (TextualApocalypse)inStream.readObject();
-				System.out.println("Salvataggio caricato con successo\n");
+				System.out.println("\nSalvataggio caricato con successo\n");
+				inStream.close();
 	    		startGame(command,scanner);
-			} catch (Exception e) {
-				System.out.println("File di salvataggio non trovato\n");
+			} catch (Exception e) {				
+				System.out.println("\nFile di salvataggio non trovato\n");
 				game.setDead(true);
 			}
 	    		break;

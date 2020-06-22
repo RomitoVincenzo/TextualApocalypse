@@ -631,7 +631,7 @@ public class TextualApocalypse extends GameDescription implements Serializable{
             	 command = scanner.nextLine();
             	 if(command.equals("s")||command.contentEquals("S"))
             	 {
-            		 
+          		 
 	            	 FileOutputStream outFile = null;
 					 try {
 						outFile = new FileOutputStream("./resources/savings/TA.dat");
