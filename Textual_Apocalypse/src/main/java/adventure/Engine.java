@@ -39,7 +39,7 @@ public class Engine {
     	switch(Integer.parseInt(command)) {
 	    	case 1:
 	    		//nuova partita
-	            //game.prologue();JSDBVOSBNVOASNVASNVABVAISCNKZBZUOVSIOVNAOIBVOIDSNBOIBSIBN
+	            game.prologue();
 	            startGame(command,scanner);
 	    		break;
 	    	case 2:
